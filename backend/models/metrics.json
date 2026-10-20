@@ -1,0 +1,1262 @@
+{
+  "heart": {
+    "disease_key": "heart",
+    "disease_name": "Heart Disease",
+    "best_model": "Random Forest",
+    "selection_criterion": "F1-Score (Primary) & ROC-AUC (Secondary)",
+    "features": [
+      "age",
+      "sex",
+      "cp",
+      "trestbps",
+      "chol",
+      "fbs",
+      "restecg",
+      "thalach",
+      "exang",
+      "oldpeak",
+      "slope",
+      "ca",
+      "thal"
+    ],
+    "feature_details": {
+      "age": {
+        "name": "Age",
+        "unit": "years",
+        "category": "Demographics"
+      },
+      "sex": {
+        "name": "Sex",
+        "unit": "0=Female, 1=Male",
+        "category": "Demographics"
+      },
+      "cp": {
+        "name": "Chest Pain Type",
+        "unit": "1:Typical, 2:Atypical, 3:Non-anginal, 4:Asymptomatic",
+        "category": "Symptoms"
+      },
+      "trestbps": {
+        "name": "Resting Blood Pressure",
+        "unit": "mm Hg",
+        "category": "Clinical Vitals"
+      },
+      "chol": {
+        "name": "Serum Cholesterol",
+        "unit": "mg/dl",
+        "category": "Laboratory"
+      },
+      "fbs": {
+        "name": "Fasting Blood Sugar > 120",
+        "unit": "0=No, 1=Yes",
+        "category": "Laboratory"
+      },
+      "restecg": {
+        "name": "Resting ECG Results",
+        "unit": "0:Normal, 1:ST-T wave abn, 2:LVH",
+        "category": "Diagnostics"
+      },
+      "thalach": {
+        "name": "Maximum Heart Rate Achieved",
+        "unit": "bpm",
+        "category": "Stress Test"
+      },
+      "exang": {
+        "name": "Exercise Induced Angina",
+        "unit": "0=No, 1=Yes",
+        "category": "Stress Test"
+      },
+      "oldpeak": {
+        "name": "ST Depression (Oldpeak)",
+        "unit": "depression value",
+        "category": "Stress Test"
+      },
+      "slope": {
+        "name": "Slope of Peak Exercise ST",
+        "unit": "1:Upsloping, 2:Flat, 3:Downsloping",
+        "category": "Stress Test"
+      },
+      "ca": {
+        "name": "Number of Major Vessels Colored",
+        "unit": "0-3 vessels",
+        "category": "Fluoroscopy"
+      },
+      "thal": {
+        "name": "Thalassemia Status",
+        "unit": "3:Normal, 6:Fixed defect, 7:Reversible defect",
+        "category": "Hematology"
+      }
+    },
+    "test_sample_size": 61,
+    "train_sample_size": 242,
+    "models": {
+      "Logistic Regression": {
+        "model_name": "Logistic Regression",
+        "accuracy": 0.8689,
+        "precision": 0.8125,
+        "recall": 0.9286,
+        "f1_score": 0.8667,
+        "roc_auc": 0.9502,
+        "confusion_matrix": {
+          "tn": 27,
+          "fp": 6,
+          "fn": 2,
+          "tp": 26,
+          "matrix": [
+            [
+              27,
+              6
+            ],
+            [
+              2,
+              26
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "ca",
+            "importance": 21.06
+          },
+          {
+            "feature": "thal",
+            "importance": 12.69
+          },
+          {
+            "feature": "sex",
+            "importance": 12.62
+          },
+          {
+            "feature": "cp",
+            "importance": 10.07
+          },
+          {
+            "feature": "exang",
+            "importance": 7.26
+          },
+          {
+            "feature": "slope",
+            "importance": 6.82
+          },
+          {
+            "feature": "thalach",
+            "importance": 6.77
+          },
+          {
+            "feature": "trestbps",
+            "importance": 5.9
+          },
+          {
+            "feature": "chol",
+            "importance": 4.27
+          },
+          {
+            "feature": "fbs",
+            "importance": 4.25
+          }
+        ]
+      },
+      "SVM": {
+        "model_name": "SVM",
+        "accuracy": 0.8689,
+        "precision": 0.8125,
+        "recall": 0.9286,
+        "f1_score": 0.8667,
+        "roc_auc": 0.9437,
+        "confusion_matrix": {
+          "tn": 27,
+          "fp": 6,
+          "fn": 2,
+          "tp": 26,
+          "matrix": [
+            [
+              27,
+              6
+            ],
+            [
+              2,
+              26
+            ]
+          ]
+        },
+        "feature_importances": []
+      },
+      "Random Forest": {
+        "model_name": "Random Forest",
+        "accuracy": 0.9016,
+        "precision": 0.8438,
+        "recall": 0.9643,
+        "f1_score": 0.9,
+        "roc_auc": 0.9589,
+        "confusion_matrix": {
+          "tn": 28,
+          "fp": 5,
+          "fn": 1,
+          "tp": 27,
+          "matrix": [
+            [
+              28,
+              5
+            ],
+            [
+              1,
+              27
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "thal",
+            "importance": 13.84
+          },
+          {
+            "feature": "thalach",
+            "importance": 12.91
+          },
+          {
+            "feature": "cp",
+            "importance": 12.25
+          },
+          {
+            "feature": "ca",
+            "importance": 10.8
+          },
+          {
+            "feature": "oldpeak",
+            "importance": 9.24
+          },
+          {
+            "feature": "age",
+            "importance": 9.07
+          },
+          {
+            "feature": "chol",
+            "importance": 8.03
+          },
+          {
+            "feature": "trestbps",
+            "importance": 7.62
+          },
+          {
+            "feature": "exang",
+            "importance": 5.15
+          },
+          {
+            "feature": "slope",
+            "importance": 4.2
+          }
+        ]
+      },
+      "XGBoost": {
+        "model_name": "XGBoost",
+        "accuracy": 0.8361,
+        "precision": 0.7647,
+        "recall": 0.9286,
+        "f1_score": 0.8387,
+        "roc_auc": 0.9351,
+        "confusion_matrix": {
+          "tn": 25,
+          "fp": 8,
+          "fn": 2,
+          "tp": 26,
+          "matrix": [
+            [
+              25,
+              8
+            ],
+            [
+              2,
+              26
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "thal",
+            "importance": 35.17
+          },
+          {
+            "feature": "cp",
+            "importance": 15.02
+          },
+          {
+            "feature": "ca",
+            "importance": 11.0
+          },
+          {
+            "feature": "sex",
+            "importance": 5.69
+          },
+          {
+            "feature": "oldpeak",
+            "importance": 5.64
+          },
+          {
+            "feature": "slope",
+            "importance": 4.9
+          },
+          {
+            "feature": "age",
+            "importance": 4.44
+          },
+          {
+            "feature": "chol",
+            "importance": 4.02
+          },
+          {
+            "feature": "trestbps",
+            "importance": 3.86
+          },
+          {
+            "feature": "thalach",
+            "importance": 3.65
+          }
+        ]
+      }
+    },
+    "best_model_metrics": {
+      "model_name": "Random Forest",
+      "accuracy": 0.9016,
+      "precision": 0.8438,
+      "recall": 0.9643,
+      "f1_score": 0.9,
+      "roc_auc": 0.9589,
+      "confusion_matrix": {
+        "tn": 28,
+        "fp": 5,
+        "fn": 1,
+        "tp": 27,
+        "matrix": [
+          [
+            28,
+            5
+          ],
+          [
+            1,
+            27
+          ]
+        ]
+      },
+      "feature_importances": [
+        {
+          "feature": "thal",
+          "importance": 13.84
+        },
+        {
+          "feature": "thalach",
+          "importance": 12.91
+        },
+        {
+          "feature": "cp",
+          "importance": 12.25
+        },
+        {
+          "feature": "ca",
+          "importance": 10.8
+        },
+        {
+          "feature": "oldpeak",
+          "importance": 9.24
+        },
+        {
+          "feature": "age",
+          "importance": 9.07
+        },
+        {
+          "feature": "chol",
+          "importance": 8.03
+        },
+        {
+          "feature": "trestbps",
+          "importance": 7.62
+        },
+        {
+          "feature": "exang",
+          "importance": 5.15
+        },
+        {
+          "feature": "slope",
+          "importance": 4.2
+        }
+      ]
+    },
+    "all_feature_importances": [
+      {
+        "feature": "thal",
+        "importance": 13.84
+      },
+      {
+        "feature": "thalach",
+        "importance": 12.91
+      },
+      {
+        "feature": "cp",
+        "importance": 12.25
+      },
+      {
+        "feature": "ca",
+        "importance": 10.8
+      },
+      {
+        "feature": "oldpeak",
+        "importance": 9.24
+      },
+      {
+        "feature": "age",
+        "importance": 9.07
+      },
+      {
+        "feature": "chol",
+        "importance": 8.03
+      },
+      {
+        "feature": "trestbps",
+        "importance": 7.62
+      },
+      {
+        "feature": "exang",
+        "importance": 5.15
+      },
+      {
+        "feature": "slope",
+        "importance": 4.2
+      }
+    ]
+  },
+  "diabetes": {
+    "disease_key": "diabetes",
+    "disease_name": "Diabetes",
+    "best_model": "Random Forest",
+    "selection_criterion": "F1-Score (Primary) & ROC-AUC (Secondary)",
+    "features": [
+      "Pregnancies",
+      "Glucose",
+      "BloodPressure",
+      "SkinThickness",
+      "Insulin",
+      "BMI",
+      "DiabetesPedigreeFunction",
+      "Age"
+    ],
+    "feature_details": {
+      "Pregnancies": {
+        "name": "Number of Pregnancies",
+        "unit": "count",
+        "category": "History"
+      },
+      "Glucose": {
+        "name": "Plasma Glucose Concentration",
+        "unit": "mg/dL (2h oral test)",
+        "category": "Laboratory"
+      },
+      "BloodPressure": {
+        "name": "Diastolic Blood Pressure",
+        "unit": "mm Hg",
+        "category": "Clinical Vitals"
+      },
+      "SkinThickness": {
+        "name": "Triceps Skinfold Thickness",
+        "unit": "mm",
+        "category": "Anthropometry"
+      },
+      "Insulin": {
+        "name": "2-Hour Serum Insulin",
+        "unit": "mu U/ml",
+        "category": "Laboratory"
+      },
+      "BMI": {
+        "name": "Body Mass Index",
+        "unit": "weight in kg/(height in m)^2",
+        "category": "Anthropometry"
+      },
+      "DiabetesPedigreeFunction": {
+        "name": "Diabetes Pedigree Function",
+        "unit": "genetic score",
+        "category": "Genetics"
+      },
+      "Age": {
+        "name": "Age",
+        "unit": "years",
+        "category": "Demographics"
+      }
+    },
+    "test_sample_size": 154,
+    "train_sample_size": 614,
+    "models": {
+      "Logistic Regression": {
+        "model_name": "Logistic Regression",
+        "accuracy": 0.7338,
+        "precision": 0.6032,
+        "recall": 0.7037,
+        "f1_score": 0.6496,
+        "roc_auc": 0.8126,
+        "confusion_matrix": {
+          "tn": 75,
+          "fp": 25,
+          "fn": 16,
+          "tp": 38,
+          "matrix": [
+            [
+              75,
+              25
+            ],
+            [
+              16,
+              38
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "Glucose",
+            "importance": 42.07
+          },
+          {
+            "feature": "BMI",
+            "importance": 25.22
+          },
+          {
+            "feature": "Pregnancies",
+            "importance": 13.25
+          },
+          {
+            "feature": "DiabetesPedigreeFunction",
+            "importance": 10.23
+          },
+          {
+            "feature": "Age",
+            "importance": 6.63
+          },
+          {
+            "feature": "Insulin",
+            "importance": 1.59
+          },
+          {
+            "feature": "BloodPressure",
+            "importance": 0.52
+          },
+          {
+            "feature": "SkinThickness",
+            "importance": 0.5
+          }
+        ]
+      },
+      "SVM": {
+        "model_name": "SVM",
+        "accuracy": 0.7273,
+        "precision": 0.5909,
+        "recall": 0.7222,
+        "f1_score": 0.65,
+        "roc_auc": 0.8139,
+        "confusion_matrix": {
+          "tn": 73,
+          "fp": 27,
+          "fn": 15,
+          "tp": 39,
+          "matrix": [
+            [
+              73,
+              27
+            ],
+            [
+              15,
+              39
+            ]
+          ]
+        },
+        "feature_importances": []
+      },
+      "Random Forest": {
+        "model_name": "Random Forest",
+        "accuracy": 0.7597,
+        "precision": 0.6491,
+        "recall": 0.6852,
+        "f1_score": 0.6667,
+        "roc_auc": 0.8241,
+        "confusion_matrix": {
+          "tn": 80,
+          "fp": 20,
+          "fn": 17,
+          "tp": 37,
+          "matrix": [
+            [
+              80,
+              20
+            ],
+            [
+              17,
+              37
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "Glucose",
+            "importance": 26.5
+          },
+          {
+            "feature": "BMI",
+            "importance": 16.06
+          },
+          {
+            "feature": "Age",
+            "importance": 12.38
+          },
+          {
+            "feature": "DiabetesPedigreeFunction",
+            "importance": 12.05
+          },
+          {
+            "feature": "Insulin",
+            "importance": 10.05
+          },
+          {
+            "feature": "BloodPressure",
+            "importance": 7.93
+          },
+          {
+            "feature": "SkinThickness",
+            "importance": 7.7
+          },
+          {
+            "feature": "Pregnancies",
+            "importance": 7.35
+          }
+        ]
+      },
+      "XGBoost": {
+        "model_name": "XGBoost",
+        "accuracy": 0.7532,
+        "precision": 0.6667,
+        "recall": 0.5926,
+        "f1_score": 0.6275,
+        "roc_auc": 0.827,
+        "confusion_matrix": {
+          "tn": 84,
+          "fp": 16,
+          "fn": 22,
+          "tp": 32,
+          "matrix": [
+            [
+              84,
+              16
+            ],
+            [
+              22,
+              32
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "Glucose",
+            "importance": 32.82
+          },
+          {
+            "feature": "BMI",
+            "importance": 14.43
+          },
+          {
+            "feature": "Age",
+            "importance": 12.62
+          },
+          {
+            "feature": "Insulin",
+            "importance": 9.38
+          },
+          {
+            "feature": "Pregnancies",
+            "importance": 9.02
+          },
+          {
+            "feature": "DiabetesPedigreeFunction",
+            "importance": 8.26
+          },
+          {
+            "feature": "BloodPressure",
+            "importance": 6.97
+          },
+          {
+            "feature": "SkinThickness",
+            "importance": 6.49
+          }
+        ]
+      }
+    },
+    "best_model_metrics": {
+      "model_name": "Random Forest",
+      "accuracy": 0.7597,
+      "precision": 0.6491,
+      "recall": 0.6852,
+      "f1_score": 0.6667,
+      "roc_auc": 0.8241,
+      "confusion_matrix": {
+        "tn": 80,
+        "fp": 20,
+        "fn": 17,
+        "tp": 37,
+        "matrix": [
+          [
+            80,
+            20
+          ],
+          [
+            17,
+            37
+          ]
+        ]
+      },
+      "feature_importances": [
+        {
+          "feature": "Glucose",
+          "importance": 26.5
+        },
+        {
+          "feature": "BMI",
+          "importance": 16.06
+        },
+        {
+          "feature": "Age",
+          "importance": 12.38
+        },
+        {
+          "feature": "DiabetesPedigreeFunction",
+          "importance": 12.05
+        },
+        {
+          "feature": "Insulin",
+          "importance": 10.05
+        },
+        {
+          "feature": "BloodPressure",
+          "importance": 7.93
+        },
+        {
+          "feature": "SkinThickness",
+          "importance": 7.7
+        },
+        {
+          "feature": "Pregnancies",
+          "importance": 7.35
+        }
+      ]
+    },
+    "all_feature_importances": [
+      {
+        "feature": "Glucose",
+        "importance": 26.5
+      },
+      {
+        "feature": "BMI",
+        "importance": 16.06
+      },
+      {
+        "feature": "Age",
+        "importance": 12.38
+      },
+      {
+        "feature": "DiabetesPedigreeFunction",
+        "importance": 12.05
+      },
+      {
+        "feature": "Insulin",
+        "importance": 10.05
+      },
+      {
+        "feature": "BloodPressure",
+        "importance": 7.93
+      },
+      {
+        "feature": "SkinThickness",
+        "importance": 7.7
+      },
+      {
+        "feature": "Pregnancies",
+        "importance": 7.35
+      }
+    ]
+  },
+  "breast_cancer": {
+    "disease_key": "breast_cancer",
+    "disease_name": "Breast Cancer",
+    "best_model": "SVM",
+    "selection_criterion": "F1-Score (Primary) & ROC-AUC (Secondary)",
+    "features": [
+      "mean_radius",
+      "mean_texture",
+      "mean_perimeter",
+      "mean_area",
+      "mean_smoothness",
+      "mean_compactness",
+      "mean_concavity",
+      "mean_concave_points",
+      "mean_symmetry",
+      "mean_fractal_dimension",
+      "radius_error",
+      "texture_error",
+      "perimeter_error",
+      "area_error",
+      "smoothness_error",
+      "compactness_error",
+      "concavity_error",
+      "concave_points_error",
+      "symmetry_error",
+      "fractal_dimension_error",
+      "worst_radius",
+      "worst_texture",
+      "worst_perimeter",
+      "worst_area",
+      "worst_smoothness",
+      "worst_compactness",
+      "worst_concavity",
+      "worst_concave_points",
+      "worst_symmetry",
+      "worst_fractal_dimension"
+    ],
+    "feature_details": {
+      "mean_radius": {
+        "name": "Mean Radius",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_texture": {
+        "name": "Mean Texture",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_perimeter": {
+        "name": "Mean Perimeter",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_area": {
+        "name": "Mean Area",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_smoothness": {
+        "name": "Mean Smoothness",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_compactness": {
+        "name": "Mean Compactness",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_concavity": {
+        "name": "Mean Concavity",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_concave_points": {
+        "name": "Mean Concave Points",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_symmetry": {
+        "name": "Mean Symmetry",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "mean_fractal_dimension": {
+        "name": "Mean Fractal Dimension",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "radius_error": {
+        "name": "Radius Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "texture_error": {
+        "name": "Texture Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "perimeter_error": {
+        "name": "Perimeter Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "area_error": {
+        "name": "Area Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "smoothness_error": {
+        "name": "Smoothness Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "compactness_error": {
+        "name": "Compactness Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "concavity_error": {
+        "name": "Concavity Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "concave_points_error": {
+        "name": "Concave Points Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "symmetry_error": {
+        "name": "Symmetry Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "fractal_dimension_error": {
+        "name": "Fractal Dimension Error",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_radius": {
+        "name": "Worst Radius",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_texture": {
+        "name": "Worst Texture",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_perimeter": {
+        "name": "Worst Perimeter",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_area": {
+        "name": "Worst Area",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_smoothness": {
+        "name": "Worst Smoothness",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_compactness": {
+        "name": "Worst Compactness",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_concavity": {
+        "name": "Worst Concavity",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_concave_points": {
+        "name": "Worst Concave Points",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_symmetry": {
+        "name": "Worst Symmetry",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      },
+      "worst_fractal_dimension": {
+        "name": "Worst Fractal Dimension",
+        "unit": "standard measurement",
+        "category": "Cytology"
+      }
+    },
+    "test_sample_size": 114,
+    "train_sample_size": 455,
+    "models": {
+      "Logistic Regression": {
+        "model_name": "Logistic Regression",
+        "accuracy": 0.9737,
+        "precision": 0.9756,
+        "recall": 0.9524,
+        "f1_score": 0.9639,
+        "roc_auc": 0.9954,
+        "confusion_matrix": {
+          "tn": 71,
+          "fp": 1,
+          "fn": 2,
+          "tp": 40,
+          "matrix": [
+            [
+              71,
+              1
+            ],
+            [
+              2,
+              40
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "worst_texture",
+            "importance": 8.18
+          },
+          {
+            "feature": "radius_error",
+            "importance": 7.31
+          },
+          {
+            "feature": "worst_symmetry",
+            "importance": 6.01
+          },
+          {
+            "feature": "mean_concave_points",
+            "importance": 5.41
+          },
+          {
+            "feature": "compactness_error",
+            "importance": 5.36
+          },
+          {
+            "feature": "worst_concavity",
+            "importance": 5.23
+          },
+          {
+            "feature": "area_error",
+            "importance": 5.22
+          },
+          {
+            "feature": "worst_area",
+            "importance": 5.05
+          },
+          {
+            "feature": "worst_radius",
+            "importance": 5.03
+          },
+          {
+            "feature": "perimeter_error",
+            "importance": 4.31
+          }
+        ]
+      },
+      "SVM": {
+        "model_name": "SVM",
+        "accuracy": 0.9825,
+        "precision": 0.9762,
+        "recall": 0.9762,
+        "f1_score": 0.9762,
+        "roc_auc": 0.9954,
+        "confusion_matrix": {
+          "tn": 71,
+          "fp": 1,
+          "fn": 1,
+          "tp": 41,
+          "matrix": [
+            [
+              71,
+              1
+            ],
+            [
+              1,
+              41
+            ]
+          ]
+        },
+        "feature_importances": []
+      },
+      "Random Forest": {
+        "model_name": "Random Forest",
+        "accuracy": 0.9737,
+        "precision": 1.0,
+        "recall": 0.9286,
+        "f1_score": 0.963,
+        "roc_auc": 0.9977,
+        "confusion_matrix": {
+          "tn": 72,
+          "fp": 0,
+          "fn": 3,
+          "tp": 39,
+          "matrix": [
+            [
+              72,
+              0
+            ],
+            [
+              3,
+              39
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "worst_area",
+            "importance": 14.31
+          },
+          {
+            "feature": "worst_concave_points",
+            "importance": 11.06
+          },
+          {
+            "feature": "mean_concave_points",
+            "importance": 10.81
+          },
+          {
+            "feature": "worst_radius",
+            "importance": 8.25
+          },
+          {
+            "feature": "worst_perimeter",
+            "importance": 8.21
+          },
+          {
+            "feature": "mean_concavity",
+            "importance": 8.04
+          },
+          {
+            "feature": "mean_perimeter",
+            "importance": 5.94
+          },
+          {
+            "feature": "mean_area",
+            "importance": 4.82
+          },
+          {
+            "feature": "mean_radius",
+            "importance": 4.47
+          },
+          {
+            "feature": "worst_concavity",
+            "importance": 4.34
+          }
+        ]
+      },
+      "XGBoost": {
+        "model_name": "XGBoost",
+        "accuracy": 0.9649,
+        "precision": 1.0,
+        "recall": 0.9048,
+        "f1_score": 0.95,
+        "roc_auc": 0.9937,
+        "confusion_matrix": {
+          "tn": 72,
+          "fp": 0,
+          "fn": 4,
+          "tp": 38,
+          "matrix": [
+            [
+              72,
+              0
+            ],
+            [
+              4,
+              38
+            ]
+          ]
+        },
+        "feature_importances": [
+          {
+            "feature": "worst_perimeter",
+            "importance": 33.33
+          },
+          {
+            "feature": "worst_radius",
+            "importance": 18.95
+          },
+          {
+            "feature": "mean_concave_points",
+            "importance": 16.37
+          },
+          {
+            "feature": "worst_concave_points",
+            "importance": 7.96
+          },
+          {
+            "feature": "mean_area",
+            "importance": 2.98
+          },
+          {
+            "feature": "worst_concavity",
+            "importance": 2.37
+          },
+          {
+            "feature": "mean_texture",
+            "importance": 2.27
+          },
+          {
+            "feature": "worst_texture",
+            "importance": 1.51
+          },
+          {
+            "feature": "radius_error",
+            "importance": 1.44
+          },
+          {
+            "feature": "worst_area",
+            "importance": 1.18
+          }
+        ]
+      }
+    },
+    "best_model_metrics": {
+      "model_name": "SVM",
+      "accuracy": 0.9825,
+      "precision": 0.9762,
+      "recall": 0.9762,
+      "f1_score": 0.9762,
+      "roc_auc": 0.9954,
+      "confusion_matrix": {
+        "tn": 71,
+        "fp": 1,
+        "fn": 1,
+        "tp": 41,
+        "matrix": [
+          [
+            71,
+            1
+          ],
+          [
+            1,
+            41
+          ]
+        ]
+      },
+      "feature_importances": []
+    },
+    "all_feature_importances": [
+      {
+        "feature": "worst_area",
+        "importance": 14.31
+      },
+      {
+        "feature": "worst_concave_points",
+        "importance": 11.06
+      },
+      {
+        "feature": "mean_concave_points",
+        "importance": 10.81
+      },
+      {
+        "feature": "worst_radius",
+        "importance": 8.25
+      },
+      {
+        "feature": "worst_perimeter",
+        "importance": 8.21
+      },
+      {
+        "feature": "mean_concavity",
+        "importance": 8.04
+      },
+      {
+        "feature": "mean_perimeter",
+        "importance": 5.94
+      },
+      {
+        "feature": "mean_area",
+        "importance": 4.82
+      },
+      {
+        "feature": "mean_radius",
+        "importance": 4.47
+      },
+      {
+        "feature": "worst_concavity",
+        "importance": 4.34
+      }
+    ]
+  }
+}

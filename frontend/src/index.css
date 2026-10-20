@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@layer components {
+  .form-input {
+    @apply w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-800 bg-white
+    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400
+    transition-colors placeholder-slate-400;
+  }
+}
