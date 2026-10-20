@@ -6,7 +6,7 @@ __pycache__/
 .Python
 *.egg
 *.egg-info/
-dist/
+backend/dist/
 build/
 .eggs/
 .venv/
@@ -23,8 +23,8 @@ dist/
 .DS_Store
 *.local
 
-# Vite
-frontend/dist/
+# The production frontend build is committed so FastAPI can serve the complete
+# application from a single Render web service.
 
 # Environment
 .env

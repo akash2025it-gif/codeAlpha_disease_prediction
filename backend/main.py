@@ -15,15 +15,18 @@ Endpoints:
 import os
 import sys
 import logging
+from pathlib import Path
 
 # Ensure backend root is in path
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIST = Path(BACKEND_DIR).parent / "frontend" / "dist"
 if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from schemas.models import (
     HeartDiseaseInput,
@@ -75,6 +78,9 @@ BREAST_CANCER_FEATURES = [
 
 @app.get("/")
 def root():
+    index_file = FRONTEND_DIST / "index.html"
+    if index_file.is_file():
+        return FileResponse(index_file)
     return {
         "message": "Disease Prediction API is running",
         "version": "1.0.0",
@@ -209,3 +215,9 @@ async def global_exception_handler(request, exc):
         status_code=500,
         content={"detail": "An unexpected error occurred. Please try again."}
     )
+
+
+# Registered after API routes so existing prediction endpoints take priority.
+# The pre-built React app is versioned with the project for one-service hosting.
+if FRONTEND_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
