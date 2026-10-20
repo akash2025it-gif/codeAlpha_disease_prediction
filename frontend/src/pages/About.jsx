@@ -21,6 +21,20 @@ export default function About() {
         <h1 className="text-4xl font-extrabold text-slate-900 mb-3">About This Project</h1>
         <p className="text-slate-500 text-lg mb-12">An educational machine-learning system for medical data classification.</p>
 
+        <Section title="Live Demo">
+          <p>
+            View the deployed project at{' '}
+            <a
+              className="font-semibold text-blue-600 underline underline-offset-2"
+              href="https://akash2025it-gif.github.io/codeAlpha_disease_prediction/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              https://akash2025it-gif.github.io/codeAlpha_disease_prediction/
+            </a>
+          </p>
+        </Section>
+
         <Section title="What Is Disease Prediction?">
           <p>Disease prediction uses statistical and machine-learning models to estimate the probability that a patient has a particular condition based on their clinical measurements. It does not replace clinical judgment — it is a decision-support tool.</p>
           <p>This project trains classification models on real, publicly available clinical datasets and deploys them via a web interface so anyone can explore how ML works with medical data.</p>
