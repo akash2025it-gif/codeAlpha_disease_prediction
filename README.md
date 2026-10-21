@@ -2,12 +2,6 @@
 
 > An AI-powered web application that predicts the risk of Heart Disease, Diabetes, and Breast Cancer using machine-learning classification algorithms trained on real clinical datasets.
 
-## Live Demo
-
-[https://akash2025it-gif.github.io/codeAlpha_disease_prediction/](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
-
----
-
 ## Project Objective
 
 Demonstrate how machine learning classification models can be trained on structured patient medical data to estimate disease risk. Built as a complete, production-style full-stack application.
@@ -259,16 +253,3 @@ Frontend runs at: **http://localhost:5173**
 - Deploy to cloud (Render, Railway, Vercel)
 - Add user accounts and prediction history
 
----
-
-## Medical Disclaimer
-
-⚠️ **This application is for educational purposes only.**
-
-It does not provide medical diagnoses, medical advice, or treatment recommendations. Always consult a qualified healthcare professional for health-related decisions. The predictions are statistical estimates and may not accurately reflect individual medical risk.
-
----
-
-## Screenshots
-
-> Run the application locally and visit http://localhost:5173 to see the UI.
