@@ -1,0 +1,4 @@
+# Includes all runtime dependencies plus XGBoost, which is only required when
+# training new candidate models. The deployed models do not use XGBoost.
+-r requirements.txt
+xgboost>=1.7.0

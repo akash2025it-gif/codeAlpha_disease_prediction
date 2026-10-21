@@ -161,6 +161,7 @@ No manual download required.
 
 ```bash
 cd backend
+pip install -r requirements-training.txt
 python training/train_all.py
 ```
 
