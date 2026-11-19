@@ -28,7 +28,7 @@ BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
-from fastapi import FastAPI, HTTPException, Depends, Header, status
+from fastapi import FastAPI, HTTPException, Depends, Header, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -188,11 +188,13 @@ BREAST_CANCER_FEATURES = [
 # System & Information Endpoints
 # ---------------------------------------------------------------------------
 @app.get("/")
-def root():
+def root(request: Request):
     return {
         "message": "MedPredict AI — Clinical Intelligence API",
         "version": "2.0.0",
         "status": "online",
+        "debug_headers": dict(request.headers),
+        "debug_scope_path": request.scope.get("path"),
         "diseases": ["Heart Disease", "Diabetes", "Breast Cancer"],
         "algorithms": ["Logistic Regression", "SVM", "Random Forest", "XGBoost"],
         "docs": "/docs",
