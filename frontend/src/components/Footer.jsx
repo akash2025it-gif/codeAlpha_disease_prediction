@@ -94,17 +94,14 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Medical Ethics Notice */}
+        {/* Clinical Decision Support & Regulatory Notice */}
         <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700/80 mb-8 text-[0.72rem] text-slate-400 leading-relaxed">
-          <strong className="text-slate-200">Clinical Research Notice:</strong> MedPredict AI is an educational
-          machine-learning decision-support research prototype. Outputs are probabilistic statistical risk scores
-          and do NOT constitute medical diagnoses, clinical screenings, or treatment protocols. Always seek the advice
-          of a qualified, licensed medical physician regarding any personal health condition or symptom.
+          <strong className="text-slate-200">Clinical Decision Support Notice:</strong> MedPredict AI is a predictive analytics system engineered for healthcare professionals, diagnostic benchmarking, and clinical risk evaluation. Predictions are statistical risk estimations designed to provide supplementary decision support alongside standard diagnostic workups and clinical examinations. Consult a licensed medical practitioner for patient treatment decisions.
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.72rem] text-slate-500">
-          <p>© {new Date().getFullYear()} MedPredict AI Systems. Engineered for clinical informatics research.</p>
+          <p>© {new Date().getFullYear()} MedPredict AI Healthcare Systems. Enterprise Clinical Intelligence.</p>
           <div className="flex items-center gap-4">
             <Link to="/about" className="hover:text-slate-400 transition-colors">
               Technology & Ethics

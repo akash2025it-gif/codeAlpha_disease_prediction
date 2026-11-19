@@ -63,7 +63,7 @@ export default function Register() {
       return;
     }
     if (!agree) {
-      setError('Please acknowledge the clinical research & educational terms.');
+      setError('Please acknowledge the clinical decision support & privacy terms.');
       return;
     }
 
@@ -231,8 +231,8 @@ export default function Register() {
                   className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-[0.72rem] text-slate-600 leading-snug">
-                  I understand that MedPredict AI is an educational clinical decision-support research prototype
-                  and agree to adhere to safe, non-diagnostic evaluation standards.
+                  I understand that MedPredict AI provides clinical decision support risk scoring and agree to
+                  adhere to professional healthcare evaluation and data privacy standards.
                 </span>
               </label>
             </div>

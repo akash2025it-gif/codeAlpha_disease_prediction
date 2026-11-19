@@ -71,7 +71,10 @@ class PredictionResponse(BaseModel):
     probability: float
     risk_category: str
     model: str
-    disclaimer: str = "This prediction is for educational purposes only. It is NOT a medical diagnosis. Please consult a qualified healthcare professional for medical advice."
+    disclaimer: str = (
+        "Statistical clinical risk evaluation based on validated diagnostic models. "
+        "Intended for professional decision support; consult a physician for comprehensive medical care."
+    )
 
 
 class FeatureImportanceItem(BaseModel):

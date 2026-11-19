@@ -340,9 +340,9 @@ export default function Home() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-6">
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
           <p className="text-xs text-slate-600 leading-relaxed">
-            <strong>Clinical Research Notice:</strong> MedPredict AI is an educational machine-learning prototype designed for medical informatics demonstration. All outputs are probabilistic statistical risk scores, not diagnostic determinations. Consult a licensed medical doctor for clinical care.{' '}
+            <strong>Clinical Decision Support Notice:</strong> MedPredict AI delivers multi-factor probabilistic risk stratification to assist clinical decision-making. Outputs complement standard diagnostic pathways and clinical assessments. Consult a licensed physician for diagnosis and treatment planning.{' '}
             <Link to="/about" className="font-semibold text-blue-700 hover:underline">
-              Learn more about our methodology →
+              Review Clinical Methodology & Validation →
             </Link>
           </p>
         </div>

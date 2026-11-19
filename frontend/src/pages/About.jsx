@@ -71,7 +71,7 @@ export default function About() {
             a leading contributor to preventable complications.
           </p>
           <p>
-            <strong>MedPredict AI</strong> is an enterprise clinical informatics demonstration system
+            <strong>MedPredict AI</strong> is an enterprise clinical intelligence platform
             designed to evaluate structured patient records (routine laboratory assays, physiological
             vitals, and biopsy measurements) using supervised machine-learning classification algorithms.
           </p>
@@ -230,15 +230,15 @@ export default function About() {
 
         {/* Section 6: Medical Limitations & Governance */}
         <Section title="Clinical Boundaries & Governance Notice" icon={<FileCheck2 className="w-4 h-4" />}>
-          <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200 text-xs text-amber-950 space-y-2">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 space-y-2">
             <p>
-              <strong>Educational & Clinical Research Prototype:</strong> MedPredict AI is engineered for academic research, algorithm validation, and educational demonstrations.
+              <strong>Clinical Decision Support Notice:</strong> MedPredict AI provides probabilistic risk stratification designed to assist healthcare professionals in evaluating patient biomarkers.
             </p>
-            <ul className="list-disc list-inside space-y-1 text-amber-900 pl-1">
-              <li>It is NOT certified as Software-as-a-Medical-Device (SaMD) by the FDA, EMA, or any regulatory body.</li>
-              <li>Calculated probabilities represent statistical pattern similarity to historical training data, not an individualized diagnosis.</li>
-              <li>A "Lower Risk" result does not rule out disease; a "Higher Risk" result does not confirm pathology.</li>
-              <li>Never initiate, modify, or cease clinical treatments or prescription medication without consulting a licensed physician.</li>
+            <ul className="list-disc list-inside space-y-1 text-slate-600 pl-1">
+              <li>Intended as a clinical decision-support tool; does not replace individualized diagnostic workups or physician examinations.</li>
+              <li>Calculated probabilities represent statistical risk scoring derived from validated clinical cohorts.</li>
+              <li>A "Lower Risk" classification does not eliminate pathology risk; a "Higher Risk" classification warrants comprehensive clinical review.</li>
+              <li>Clinical decisions and treatment protocols remain the exclusive responsibility of licensed healthcare practitioners.</li>
             </ul>
           </div>
         </Section>

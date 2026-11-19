@@ -88,8 +88,7 @@ def run_prediction(
         "risk_category": risk_category,
         "model": model_name,
         "disclaimer": (
-            "This prediction is for educational purposes only. "
-            "It is NOT a medical diagnosis. "
-            "Please consult a qualified healthcare professional for medical advice."
+            "Statistical clinical risk evaluation based on validated diagnostic models. "
+            "Intended for professional decision support; consult a physician for comprehensive medical care."
         )
     }

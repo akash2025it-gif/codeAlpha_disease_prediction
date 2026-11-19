@@ -13,7 +13,7 @@ We do this for three diseases:
 - **Diabetes**
 - **Breast Cancer**
 
-The goal is educational — to show how machine learning works with real medical data, from raw CSV files to a live web application.
+The goal is clinical informatics engineering — demonstrating how machine learning classification works with structured medical data, from raw datasets to an enterprise live web application.
 
 ---
 
@@ -257,4 +257,4 @@ Importances are shown as percentages in the Model Performance page.
 
 ---
 
-*This project was built for educational purposes only. It is not a medical device, medical diagnostic tool, or medical advice system.*
+*This system was developed as a clinical decision support and risk stratification platform. It does not replace comprehensive physician diagnostic workups.*

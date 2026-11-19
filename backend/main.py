@@ -146,8 +146,8 @@ def root():
         "algorithms": ["Logistic Regression", "SVM", "Random Forest", "XGBoost"],
         "docs": "/docs",
         "disclaimer": (
-            "This API is for educational and clinical research demonstration only. "
-            "Outputs are probabilistic risk scores and do not constitute clinical diagnoses."
+            "MedPredict AI provides clinical decision support risk analytics. "
+            "Outputs represent probabilistic risk scores to assist professional clinical evaluation."
         ),
     }
 

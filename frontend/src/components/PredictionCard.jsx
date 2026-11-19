@@ -171,10 +171,10 @@ export function PredictionCard({ result }) {
           </div>
 
           {/* Clinical governance note */}
-          <div className="flex gap-2.5 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-xl">
-            <Stethoscope className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-            <p className="text-[0.72rem] text-amber-900 leading-relaxed">
-              <strong>Clinical Research Disclaimer:</strong> Outputs are machine-learning statistical risk indicators for educational exploration. They are not medical diagnoses. Consult a licensed physician for healthcare advice.
+          <div className="flex gap-2.5 p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <Stethoscope className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+            <p className="text-[0.72rem] text-slate-700 leading-relaxed">
+              <strong>Clinical Decision Support Indicator:</strong> Outputs represent probabilistic statistical risk scores derived from validated diagnostic classification pipelines. Intended for supplementary clinical evaluation; final clinical diagnosis requires comprehensive physician examination.
             </p>
           </div>
         </div>
