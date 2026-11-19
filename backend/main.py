@@ -62,9 +62,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Accept"],
+    allow_origin_regex=r"^https:\/\/.*\.github\.io$|^https:\/\/.*\.vercel\.app$",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 HEART_FEATURES = [

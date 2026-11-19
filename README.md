@@ -16,7 +16,8 @@
 
 ### Live Application Links
 - **Frontend Dashboard (GitHub Pages):** [https://akash2025it-gif.github.io/codeAlpha_disease_prediction/](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
-- **Backend API Docs (Swagger UI):** `http://127.0.0.1:8000/docs` (or your deployed Render URL)
+- **Live Prediction API (Vercel):** [https://backend-teal-theta-65.vercel.app](https://backend-teal-theta-65.vercel.app)
+- **Interactive API Documentation (Swagger UI):** [https://backend-teal-theta-65.vercel.app/docs](https://backend-teal-theta-65.vercel.app/docs)
 
 ---
 
@@ -59,9 +60,10 @@
                ▼                               │
 ┌──────────────────────────────────────────────┴──────────────┐
 │                    FASTAPI BACKEND SERVICE                  │
-│       Python 3.11 / Uvicorn (Hosted on Render Web Service)  │
+│       Python 3.11 / ASGI (Hosted on Vercel Serverless)      │
 │  - Input validation via Pydantic v2 schemas                 │
 │  - CORS Middleware & safe error handling                    │
+│  - Auto-scaled serverless compute with 1024MB RAM           │
 └──────────────┬──────────────────────────────────────────────┘
                │
                ▼
@@ -248,11 +250,20 @@ VITE_API_URL=http://127.0.0.1:8000
 # VITE_API_URL=https://your-backend.onrender.com
 ```
 
+### Frontend (`frontend/.env`)
+```ini
+# Base URL for API requests.
+# In local development:
+VITE_API_URL=http://127.0.0.1:8000
+
+# In production (automatically configured for Vercel backend):
+VITE_API_URL=https://backend-teal-theta-65.vercel.app
+```
+
 ### Production Deployment Variables
 When deploying frontend to GitHub Pages:
-1. Navigate to your GitHub repository: **Settings → Secrets and variables → Actions**.
-2. Create a new repository secret named: `VITE_API_URL`.
-3. Set value to your production backend URL (e.g. `https://medpredict-ai-backend.onrender.com`).
+1. The GitHub Actions workflow (`deploy-pages.yml`) automatically falls back to `https://backend-teal-theta-65.vercel.app`.
+2. To point to a custom backend domain, set repository secret `VITE_API_URL` under **Settings → Secrets and variables → Actions**.
 
 ---
 
@@ -295,7 +306,7 @@ When deploying frontend to GitHub Pages:
   "disease": "Heart Disease",
   "prediction": 1,
   "result": "Higher Risk",
-  "probability": 0.82,
+  "probability": 0.95,
   "risk_category": "Higher Risk",
   "model": "Random Forest",
   "disclaimer": "This prediction is for educational purposes only. It is NOT a medical diagnosis. Please consult a qualified healthcare professional for medical advice."
@@ -306,18 +317,38 @@ When deploying frontend to GitHub Pages:
 
 ## 12. Deployment Guide
 
+### Backend Deployment (Vercel)
+The backend is configured as a serverless ASGI application via `backend/vercel.json`:
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "main.py": {
+      "excludeFiles": "{datasets/**,training/**,preprocessing/**,__pycache__/**,**/__pycache__/**,**/*.pyc}",
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/main.py"
+    }
+  ]
+}
+```
+**Key Vercel Optimizations:**
+1. **Bundle Size Under 250 MB Limit:** Heavy training dependencies like XGBoost are isolated in `requirements-training.txt`. The runtime `requirements.txt` installs only scikit-learn, SciPy, pandas, and NumPy, resulting in a lean ~110 MB uncompressed function footprint well below the AWS Lambda / Vercel 250 MB ceiling.
+2. **Serverless Rewrites:** Unconditional rewrites route all paths (`/health`, `/models`, `/metrics`, `/predict/*`) to `main.py`.
+3. **Memory & Timeout:** Configured with 1024 MB memory and 30-second execution window to handle cold starts and high-dimensional model evaluations.
+4. **Deploying via Vercel CLI or GitHub:**
+   - Link project: `vercel link` (Project: `backend`, Directory: `backend`)
+   - Deploy to production: `vercel --prod`
+
 ### Frontend Deployment (GitHub Pages)
 The repository includes an automated GitHub Actions deployment workflow (`.github/workflows/deploy-pages.yml`).
 1. Push changes to the `main` branch.
-2. In repository **Settings → Pages**, set source to **GitHub Actions**.
-3. The workflow builds the Vite application with base path `/codeAlpha_disease_prediction/`, injects `VITE_API_URL`, generates a `404.html` SPA fallback, and deploys directly to GitHub Pages.
-
-### Backend Deployment (Render)
-A production blueprint `render.yaml` is provided:
-1. Log in to [Render](https://render.com).
-2. Connect your GitHub repository and select **New Web Service**.
-3. Choose the `backend` directory, runtime **Python 3**, build command `pip install -r requirements.txt`, and start command `uvicorn main:app --host 0.0.0.0 --port $PORT`.
-4. Copy the assigned URL and set it as `VITE_API_URL` in your GitHub repository secrets.
+2. The workflow builds the Vite application with base path `/codeAlpha_disease_prediction/`, injects `VITE_API_URL` pointing to `https://backend-teal-theta-65.vercel.app`, generates `404.html` SPA routing fallback, and deploys directly to GitHub Pages.
 
 ---
 

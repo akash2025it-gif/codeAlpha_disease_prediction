@@ -35,9 +35,8 @@ frontend/dist/
 .env.*.local
 backend/.env.local
 
-# === Vercel — not needed for GitHub Pages + Render deployment ===
+# === Vercel local CLI cache (configuration vercel.json is tracked) ===
 .vercel/
-backend/vercel.json
 
 # === Logs ===
 *.log

@@ -34,11 +34,8 @@ jobs:
       - name: Build
         working-directory: frontend
         env:
-          # Set the production backend URL as a GitHub Actions secret named VITE_API_URL
-          # Go to: Settings → Secrets and variables → Actions → New repository secret
-          # Name: VITE_API_URL
-          # Value: https://<your-render-service>.onrender.com
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          # Deployed Vercel prediction API (can be overridden by repository secret VITE_API_URL)
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://backend-teal-theta-65.vercel.app' }}
         run: npm ci && npm run build
 
       # GitHub Pages serves only static files and does not handle client-side routing.

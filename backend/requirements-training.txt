@@ -1,4 +1,6 @@
-# Includes all runtime dependencies plus XGBoost, which is only required when
-# training new candidate models. The deployed models do not use XGBoost.
+# Includes all runtime dependencies plus XGBoost, which is required when
+# training new candidate models across all 4 algorithms. The deployed models
+# in production use Random Forest and SVM, so runtime does not require XGBoost,
+# keeping the Vercel serverless function size below the 250 MB ceiling.
 -r requirements.txt
 xgboost>=1.7.0
