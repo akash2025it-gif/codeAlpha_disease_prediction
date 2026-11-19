@@ -23,19 +23,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+
       - name: Build
         working-directory: frontend
+        env:
+          # Set the production backend URL as a GitHub Actions secret named VITE_API_URL
+          # Go to: Settings → Secrets and variables → Actions → New repository secret
+          # Name: VITE_API_URL
+          # Value: https://<your-render-service>.onrender.com
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm ci && npm run build
+
+      # GitHub Pages serves only static files and does not handle client-side routing.
+      # Copying index.html as 404.html ensures deep-link navigations work correctly.
+      - name: Create SPA 404 fallback
+        run: cp frontend/dist/index.html frontend/dist/404.html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

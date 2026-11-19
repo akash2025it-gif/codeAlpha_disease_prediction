@@ -2,11 +2,11 @@
 FastAPI backend for Disease Prediction ML Application.
 
 Endpoints:
-  GET  /              - Root info
-  GET  /health        - Health check
-  GET  /models        - Available models info
-  GET  /metrics       - All model training metrics
-  GET  /metrics/{key} - Metrics for a specific disease
+  GET  /                    - Root info
+  GET  /health              - Health check + models status
+  GET  /models              - Available models info
+  GET  /metrics             - All model training metrics
+  GET  /metrics/{key}       - Metrics for a specific disease
   POST /predict/heart       - Heart disease prediction
   POST /predict/diabetes    - Diabetes prediction
   POST /predict/breast-cancer - Breast cancer prediction
@@ -15,18 +15,14 @@ Endpoints:
 import os
 import sys
 import logging
-from pathlib import Path
 
-# Ensure backend root is in path
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIST = Path(BACKEND_DIR).parent / "frontend" / "dist"
 if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
 from schemas.models import (
     HeartDiseaseInput,
@@ -39,29 +35,45 @@ from utils.predict import load_metrics, run_prediction
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Allowed origins — extend this list when the frontend domain changes.
+# "*" is intentionally used for open educational demo projects; for a
+# production clinical system you would restrict this to specific domains.
+# ---------------------------------------------------------------------------
+ALLOWED_ORIGINS = [
+    "https://akash2025it-gif.github.io",
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+]
+
 app = FastAPI(
-    title="Disease Prediction API",
-    description="ML-powered disease risk prediction for Heart Disease, Diabetes, and Breast Cancer.",
-    version="1.0.0",
+    title="MedPredict AI — Disease Prediction API",
+    description=(
+        "Machine-learning powered disease risk estimation for Heart Disease, "
+        "Diabetes, and Breast Cancer. Educational purposes only — not a medical device."
+    ),
+    version="1.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Accept"],
 )
 
 HEART_FEATURES = [
     "age", "sex", "cp", "trestbps", "chol", "fbs",
-    "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"
+    "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal",
 ]
 DIABETES_FEATURES = [
     "Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
-    "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"
+    "Insulin", "BMI", "DiabetesPedigreeFunction", "Age",
 ]
 BREAST_CANCER_FEATURES = [
     "mean_radius", "mean_texture", "mean_perimeter", "mean_area",
@@ -72,21 +84,23 @@ BREAST_CANCER_FEATURES = [
     "concave_points_error", "symmetry_error", "fractal_dimension_error",
     "worst_radius", "worst_texture", "worst_perimeter", "worst_area",
     "worst_smoothness", "worst_compactness", "worst_concavity",
-    "worst_concave_points", "worst_symmetry", "worst_fractal_dimension"
+    "worst_concave_points", "worst_symmetry", "worst_fractal_dimension",
 ]
 
 
 @app.get("/")
 def root():
-    index_file = FRONTEND_DIST / "index.html"
-    if index_file.is_file():
-        return FileResponse(index_file)
     return {
-        "message": "Disease Prediction API is running",
-        "version": "1.0.0",
+        "message": "MedPredict AI — Disease Prediction API",
+        "version": "1.1.0",
+        "status": "online",
         "diseases": ["Heart Disease", "Diabetes", "Breast Cancer"],
         "algorithms": ["Logistic Regression", "SVM", "Random Forest", "XGBoost"],
-        "docs": "/docs"
+        "docs": "/docs",
+        "disclaimer": (
+            "This API is for educational purposes only. "
+            "Outputs are not medical diagnoses."
+        ),
     }
 
 
@@ -98,9 +112,10 @@ def health_check():
         return {
             "status": "healthy",
             "models_available": models_loaded,
-            "model_count": len(models_loaded)
+            "model_count": len(models_loaded),
         }
     except Exception as e:
+        logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail=f"Service unavailable: {str(e)}")
 
 
@@ -142,7 +157,7 @@ def get_disease_metrics(disease_key: str):
     if disease_key not in valid_keys:
         raise HTTPException(
             status_code=404,
-            detail=f"Unknown disease key '{disease_key}'. Valid keys: {valid_keys}"
+            detail=f"Unknown disease key '{disease_key}'. Valid keys: {valid_keys}",
         )
     try:
         metrics = load_metrics()
@@ -169,7 +184,9 @@ def predict_heart_disease(data: HeartDiseaseInput):
         raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
         logger.error(f"Heart prediction error: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Prediction failed. Please check input values.")
+        raise HTTPException(
+            status_code=500, detail="Prediction failed. Please check input values."
+        )
 
 
 @app.post("/predict/diabetes", response_model=PredictionResponse)
@@ -187,7 +204,9 @@ def predict_diabetes(data: DiabetesInput):
         raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
         logger.error(f"Diabetes prediction error: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Prediction failed. Please check input values.")
+        raise HTTPException(
+            status_code=500, detail="Prediction failed. Please check input values."
+        )
 
 
 @app.post("/predict/breast-cancer", response_model=PredictionResponse)
@@ -205,7 +224,9 @@ def predict_breast_cancer(data: BreastCancerInput):
         raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
         logger.error(f"Breast cancer prediction error: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Prediction failed. Please check input values.")
+        raise HTTPException(
+            status_code=500, detail="Prediction failed. Please check input values."
+        )
 
 
 @app.exception_handler(Exception)
@@ -213,11 +234,5 @@ async def global_exception_handler(request, exc):
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": "An unexpected error occurred. Please try again."}
+        content={"detail": "An unexpected error occurred. Please try again."},
     )
-
-
-# Registered after API routes so existing prediction endpoints take priority.
-# The pre-built React app is versioned with the project for one-service hosting.
-if FRONTEND_DIST.is_dir():
-    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")

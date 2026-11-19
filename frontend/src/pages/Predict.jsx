@@ -1,97 +1,177 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Activity, Dna, Loader2, AlertCircle } from 'lucide-react';
+import { Heart, Activity, Dna, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import HeartForm from '../components/forms/HeartForm';
 import DiabetesForm from '../components/forms/DiabetesForm';
 import BreastCancerForm from '../components/forms/BreastCancerForm';
 import { PredictionCard } from '../components/PredictionCard';
 
 const DISEASES = [
-  { key: 'heart', label: 'Heart Disease', icon: <Heart className="w-5 h-5" />, color: 'text-red-500', activeBg: 'bg-red-50 border-red-300', inactiveBg: 'bg-white border-slate-200' },
-  { key: 'diabetes', label: 'Diabetes', icon: <Activity className="w-5 h-5" />, color: 'text-sky-500', activeBg: 'bg-sky-50 border-sky-300', inactiveBg: 'bg-white border-slate-200' },
-  { key: 'breast_cancer', label: 'Breast Cancer', icon: <Dna className="w-5 h-5" />, color: 'text-purple-500', activeBg: 'bg-purple-50 border-purple-300', inactiveBg: 'bg-white border-slate-200' },
+  {
+    key: 'heart',
+    label: 'Heart Disease',
+    subtitle: 'Cardiovascular Risk (13 features)',
+    icon: <Heart className="w-5 h-5 text-red-600" />,
+    activeClass: 'border-red-500 bg-red-50/50 text-red-950 ring-2 ring-red-500/20',
+  },
+  {
+    key: 'diabetes',
+    label: 'Diabetes',
+    subtitle: 'Glycemic Risk (8 features)',
+    icon: <Activity className="w-5 h-5 text-sky-600" />,
+    activeClass: 'border-sky-500 bg-sky-50/50 text-sky-950 ring-2 ring-sky-500/20',
+  },
+  {
+    key: 'breast_cancer',
+    label: 'Breast Cancer',
+    subtitle: 'FNA Cytology (30 features)',
+    icon: <Dna className="w-5 h-5 text-purple-600" />,
+    activeClass: 'border-purple-500 bg-purple-50/50 text-purple-950 ring-2 ring-purple-500/20',
+  },
 ];
 
 export default function Predict() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initial = searchParams.get('disease') || 'heart';
-  const [selected, setSelected] = useState(initial);
+  const [selected, setSelected] = useState(
+    ['heart', 'diabetes', 'breast_cancer'].includes(initial) ? initial : 'heart'
+  );
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { setResult(null); }, [selected]);
+  useEffect(() => {
+    setResult(null);
+  }, [selected]);
+
+  const handleSelect = (key) => {
+    setSelected(key);
+    setSearchParams({ disease: key });
+  };
 
   const handleResult = (r) => {
     setResult(r);
     if (!r.error) {
       setTimeout(() => {
-        document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 200);
     }
   };
 
-  const FormComponent = selected === 'heart' ? HeartForm : selected === 'diabetes' ? DiabetesForm : BreastCancerForm;
+  const FormComponent =
+    selected === 'heart' ? HeartForm : selected === 'diabetes' ? DiabetesForm : BreastCancerForm;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Disease Risk Prediction</h1>
-        <p className="text-slate-500 mb-8">Select a disease, fill in the medical values, and receive an AI-powered risk assessment.</p>
-
-        {/* Disease selector */}
-        <div className="grid grid-cols-3 gap-3 mb-10">
-          {DISEASES.map(d => (
-            <button
-              key={d.key}
-              onClick={() => setSelected(d.key)}
-              className={`flex flex-col sm:flex-row items-center justify-center gap-2 border-2 rounded-xl py-3 px-4 font-medium text-sm transition-all ${
-                selected === d.key ? `${d.activeBg} ${d.color}` : `${d.inactiveBg} text-slate-600 hover:border-slate-300`
-              }`}
-            >
-              <span className={selected === d.key ? d.color : 'text-slate-400'}>{d.icon}</span>
-              <span>{d.label}</span>
-            </button>
-          ))}
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+        {/* Page Title */}
+        <div className="mb-8">
+          <p className="section-label mb-1">Clinical Evaluation</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Disease Risk Prediction
+          </h1>
+          <p className="text-sm text-slate-500 mt-1.5 max-w-2xl">
+            Select a clinical condition below, verify patient telemetry in the structured input form,
+            and run machine-learning inference via the active model pipeline.
+          </p>
         </div>
 
-        {/* Form */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        {/* Disease Tabs */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8" role="tablist" aria-label="Select Disease">
+          {DISEASES.map((d) => {
+            const isSelected = selected === d.key;
+            return (
+              <button
+                key={d.key}
+                role="tab"
+                aria-selected={isSelected}
+                onClick={() => handleSelect(d.key)}
+                className={`flex items-center gap-3.5 p-4 rounded-xl border text-left transition-all cursor-pointer ${
+                  isSelected
+                    ? d.activeClass
+                    : 'border-slate-200 bg-white hover:border-slate-300 text-slate-700 shadow-xs'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                  {d.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900 leading-tight">{d.label}</p>
+                  <p className="text-[0.7rem] text-slate-500 mt-0.5">{d.subtitle}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Form Container Card */}
+        <div className="card p-6 sm:p-8 mb-8">
+          <div className="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                {selected === 'heart'
+                  ? 'Heart Disease Clinical Predictor (Cleveland UCI)'
+                  : selected === 'diabetes'
+                  ? 'Diabetes Diagnostic Predictor (Pima Indians)'
+                  : 'Breast Cancer Cytology Predictor (Wisconsin WDBC)'}
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                All features must correspond to verified medical tests. Outliers are handled via median imputation.
+              </p>
+            </div>
+            {result && (
+              <button
+                type="button"
+                onClick={() => setResult(null)}
+                className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Clear Result
+              </button>
+            )}
+          </div>
+
           <AnimatePresence mode="wait">
             <motion.div
               key={selected}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
             >
               <FormComponent onResult={handleResult} onLoading={setLoading} />
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Loading */}
+        {/* Loading Spinner State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-10 gap-3">
-            <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-            <p className="text-slate-500 font-medium">Analyzing medical data...</p>
+          <div className="card p-10 flex flex-col items-center justify-center gap-3 text-center mb-8 border-blue-200 bg-blue-50/40">
+            <Loader2 className="w-9 h-9 text-blue-600 animate-spin" />
+            <p className="text-sm font-semibold text-slate-800">Analyzing medical data...</p>
+            <p className="text-xs text-slate-500 max-w-sm">
+              Executing scikit-learn preprocessing pipeline and running model probability evaluation.
+            </p>
           </div>
         )}
 
-        {/* Result */}
+        {/* Prediction Result Section */}
         <div id="result-section">
           <AnimatePresence>
             {result && !loading && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="mt-8"
+                transition={{ duration: 0.3 }}
               >
                 {result.error ? (
-                  <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                    <p className="text-red-700 text-sm">{result.error}</p>
+                  <div className="card p-5 border-red-200 bg-red-50 flex items-start gap-3 text-red-900">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-bold">Prediction Request Failed</p>
+                      <p className="text-xs text-red-800 mt-1 leading-relaxed">{result.error}</p>
+                    </div>
                   </div>
                 ) : (
                   <PredictionCard result={result} />

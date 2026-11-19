@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -9,8 +9,8 @@ import Disclaimer from './pages/Disclaimer';
 
 export default function App() {
   return (
-    <HashRouter>
-      <div className="min-h-screen bg-slate-50 flex flex-col">
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <div className="min-h-screen flex flex-col" style={{ background: 'var(--color-background)' }}>
         <Navbar />
         <main className="flex-1">
           <Routes>
@@ -23,6 +23,6 @@ export default function App() {
         </main>
         <Footer />
       </div>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

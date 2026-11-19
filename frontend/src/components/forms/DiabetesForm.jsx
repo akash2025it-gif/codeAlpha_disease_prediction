@@ -1,25 +1,70 @@
 import { useState } from 'react';
 import { predictDiabetes } from '../../services/api';
 import FormField from '../FormField';
+import { RotateCcw, Sparkles } from 'lucide-react';
 
 const DEFAULTS = {
-  Pregnancies: 3, Glucose: 117, BloodPressure: 72, SkinThickness: 23,
-  Insulin: 30, BMI: 32.0, DiabetesPedigreeFunction: 0.372, Age: 29
+  Pregnancies: 3,
+  Glucose: 117,
+  BloodPressure: 72,
+  SkinThickness: 23,
+  Insulin: 30,
+  BMI: 32.0,
+  DiabetesPedigreeFunction: 0.372,
+  Age: 29,
+};
+
+const PRESETS = {
+  lowerRisk: {
+    Pregnancies: 1,
+    Glucose: 85,
+    BloodPressure: 66,
+    SkinThickness: 20,
+    Insulin: 79,
+    BMI: 22.5,
+    DiabetesPedigreeFunction: 0.238,
+    Age: 25,
+  },
+  higherRisk: {
+    Pregnancies: 6,
+    Glucose: 168,
+    BloodPressure: 88,
+    SkinThickness: 38,
+    Insulin: 210,
+    BMI: 38.5,
+    DiabetesPedigreeFunction: 0.825,
+    Age: 54,
+  },
 };
 
 export default function DiabetesForm({ onResult, onLoading }) {
   const [form, setForm] = useState(DEFAULTS);
   const [errors, setErrors] = useState({});
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleReset = () => {
+    setForm(DEFAULTS);
+    setErrors({});
+  };
+
+  const applyPreset = (presetKey) => {
+    setForm(PRESETS[presetKey]);
+    setErrors({});
+  };
 
   const validate = () => {
     const e = {};
-    if (form.Glucose < 0) e.Glucose = 'Glucose cannot be negative';
-    if (form.BMI < 0) e.BMI = 'BMI cannot be negative';
-    if (form.BloodPressure < 0) e.BloodPressure = 'Blood pressure cannot be negative';
-    if (form.Age < 1 || form.Age > 120) e.Age = 'Age must be 1–120';
-    if (form.DiabetesPedigreeFunction < 0) e.DiabetesPedigreeFunction = 'Must be a positive value';
+    if (form.Pregnancies < 0 || form.Pregnancies > 20) e.Pregnancies = 'Pregnancies must be between 0 and 20';
+    if (form.Glucose < 0 || form.Glucose > 300) e.Glucose = 'Glucose must be between 0 and 300 mg/dL';
+    if (form.BloodPressure < 0 || form.BloodPressure > 200) e.BloodPressure = 'Blood pressure must be between 0 and 200 mm Hg';
+    if (form.SkinThickness < 0 || form.SkinThickness > 100) e.SkinThickness = 'Skin thickness must be between 0 and 100 mm';
+    if (form.Insulin < 0 || form.Insulin > 900) e.Insulin = 'Insulin must be between 0 and 900 mu U/ml';
+    if (form.BMI < 0 || form.BMI > 70) e.BMI = 'BMI must be between 0.0 and 70.0 kg/m²';
+    if (form.DiabetesPedigreeFunction < 0 || form.DiabetesPedigreeFunction > 3.0) {
+      e.DiabetesPedigreeFunction = 'Pedigree score must be between 0.0 and 3.0';
+    }
+    if (form.Age < 1 || form.Age > 120) e.Age = 'Age must be between 1 and 120 years';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -30,11 +75,18 @@ export default function DiabetesForm({ onResult, onLoading }) {
     onLoading(true);
     try {
       const payload = {};
-      Object.keys(form).forEach(k => { payload[k] = Number(form[k]); });
+      Object.keys(form).forEach((k) => {
+        payload[k] = Number(form[k]);
+      });
       const result = await predictDiabetes(payload);
       onResult(result);
     } catch (err) {
-      onResult({ error: err?.response?.data?.detail || 'Prediction failed. Please try again.' });
+      onResult({
+        error:
+          err?.response?.data?.detail ||
+          err?.message ||
+          'Prediction failed. Please ensure the backend server is reachable.',
+      });
     } finally {
       onLoading(false);
     }
@@ -42,55 +94,175 @@ export default function DiabetesForm({ onResult, onLoading }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <FormField label="Number of Pregnancies" tooltip="Number of times pregnant" error={errors.Pregnancies}>
-          <input type="number" value={form.Pregnancies} onChange={e => set('Pregnancies', e.target.value)}
-            className="form-input" min="0" max="20" />
-        </FormField>
+      {/* Sample preset buttons */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-sky-50/60 border border-sky-100 rounded-xl">
+        <span className="text-xs font-semibold text-sky-900 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-sky-600" />
+          Test Sample Profiles:
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => applyPreset('lowerRisk')}
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-sky-700 border border-slate-200 rounded-lg hover:border-sky-300 transition-colors"
+          >
+            Load Lower Risk Sample
+          </button>
+          <button
+            type="button"
+            onClick={() => applyPreset('higherRisk')}
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-red-700 border border-slate-200 rounded-lg hover:border-red-300 transition-colors"
+          >
+            Load Higher Risk Sample
+          </button>
+        </div>
+      </div>
 
-        <FormField label="Plasma Glucose (mg/dL)" tooltip="Plasma glucose concentration at 2 hours in an oral glucose tolerance test" error={errors.Glucose}>
-          <input type="number" value={form.Glucose} onChange={e => set('Glucose', e.target.value)}
-            className="form-input" min="0" max="300" />
-        </FormField>
-
-        <FormField label="Diastolic Blood Pressure (mm Hg)" tooltip="Diastolic blood pressure in mm Hg" error={errors.BloodPressure}>
-          <input type="number" value={form.BloodPressure} onChange={e => set('BloodPressure', e.target.value)}
-            className="form-input" min="0" max="200" />
-        </FormField>
-
-        <FormField label="Skin Thickness (mm)" tooltip="Triceps skin fold thickness in mm" error={errors.SkinThickness}>
-          <input type="number" value={form.SkinThickness} onChange={e => set('SkinThickness', e.target.value)}
-            className="form-input" min="0" max="100" />
-        </FormField>
-
-        <FormField label="Serum Insulin (mu U/ml)" tooltip="2-hour serum insulin level (mu U/ml)" error={errors.Insulin}>
-          <input type="number" value={form.Insulin} onChange={e => set('Insulin', e.target.value)}
-            className="form-input" min="0" max="900" />
-        </FormField>
-
-        <FormField label="BMI (kg/m²)" tooltip="Body Mass Index: weight in kg / (height in m)²" error={errors.BMI}>
-          <input type="number" step="0.1" value={form.BMI} onChange={e => set('BMI', e.target.value)}
-            className="form-input" min="0" max="70" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <FormField
+          label="Pregnancies"
+          tooltip="Number of times pregnant (0 if never pregnant or male)"
+          error={errors.Pregnancies}
+          required
+        >
+          <input
+            type="number"
+            value={form.Pregnancies}
+            onChange={(e) => set('Pregnancies', e.target.value)}
+            className="field-input"
+            min="0"
+            max="20"
+          />
         </FormField>
 
         <FormField
-          label="Diabetes Pedigree Function"
-          tooltip="A function that scores the likelihood of diabetes based on family history (genetic predisposition score)"
-          error={errors.DiabetesPedigreeFunction}
+          label="Plasma Glucose (mg/dL)"
+          tooltip="Plasma glucose concentration at 2 hours in an oral glucose tolerance test"
+          error={errors.Glucose}
+          required
         >
-          <input type="number" step="0.001" value={form.DiabetesPedigreeFunction} onChange={e => set('DiabetesPedigreeFunction', e.target.value)}
-            className="form-input" min="0" max="3" />
+          <input
+            type="number"
+            value={form.Glucose}
+            onChange={(e) => set('Glucose', e.target.value)}
+            className="field-input"
+            min="0"
+            max="300"
+          />
         </FormField>
 
-        <FormField label="Age (years)" tooltip="Patient age in years" error={errors.Age}>
-          <input type="number" value={form.Age} onChange={e => set('Age', e.target.value)}
-            className="form-input" min="1" max="120" />
+        <FormField
+          label="Diastolic BP (mm Hg)"
+          tooltip="Diastolic blood pressure in mm Hg"
+          error={errors.BloodPressure}
+          required
+        >
+          <input
+            type="number"
+            value={form.BloodPressure}
+            onChange={(e) => set('BloodPressure', e.target.value)}
+            className="field-input"
+            min="0"
+            max="200"
+          />
+        </FormField>
+
+        <FormField
+          label="Skin Thickness (mm)"
+          tooltip="Triceps skin fold thickness in mm (anthropometric measurement)"
+          error={errors.SkinThickness}
+          required
+        >
+          <input
+            type="number"
+            value={form.SkinThickness}
+            onChange={(e) => set('SkinThickness', e.target.value)}
+            className="field-input"
+            min="0"
+            max="100"
+          />
+        </FormField>
+
+        <FormField
+          label="Serum Insulin (mu U/ml)"
+          tooltip="2-Hour serum insulin concentration in mu U/ml"
+          error={errors.Insulin}
+          required
+        >
+          <input
+            type="number"
+            value={form.Insulin}
+            onChange={(e) => set('Insulin', e.target.value)}
+            className="field-input"
+            min="0"
+            max="900"
+          />
+        </FormField>
+
+        <FormField
+          label="BMI (kg/m²)"
+          tooltip="Body Mass Index = weight in kg / (height in m)²"
+          error={errors.BMI}
+          required
+        >
+          <input
+            type="number"
+            step="0.1"
+            value={form.BMI}
+            onChange={(e) => set('BMI', e.target.value)}
+            className="field-input"
+            min="0"
+            max="70"
+          />
+        </FormField>
+
+        <FormField
+          label="Diabetes Pedigree Func."
+          tooltip="A genetic risk score calculating family diabetes history likelihood"
+          error={errors.DiabetesPedigreeFunction}
+          required
+        >
+          <input
+            type="number"
+            step="0.001"
+            value={form.DiabetesPedigreeFunction}
+            onChange={(e) => set('DiabetesPedigreeFunction', e.target.value)}
+            className="field-input"
+            min="0"
+            max="3"
+          />
+        </FormField>
+
+        <FormField
+          label="Age (years)"
+          tooltip="Patient age in completed years"
+          error={errors.Age}
+          required
+        >
+          <input
+            type="number"
+            value={form.Age}
+            onChange={(e) => set('Age', e.target.value)}
+            className="field-input"
+            min="1"
+            max="120"
+          />
         </FormField>
       </div>
 
-      <button type="submit" className="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
-        Predict Diabetes Risk
-      </button>
+      <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-sky-600 hover:bg-sky-700">
+          Predict Diabetes Risk
+        </button>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="w-full sm:w-auto btn-outline py-3 px-5 text-slate-600 hover:text-slate-900"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Reset
+        </button>
+      </div>
     </form>
   );
 }

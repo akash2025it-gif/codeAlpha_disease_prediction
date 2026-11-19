@@ -1,75 +1,139 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Heart, Activity, Dna, ArrowRight, BarChart2, Brain, CheckCircle, ChevronRight } from 'lucide-react';
+import {
+  Heart,
+  Activity,
+  Dna,
+  ArrowRight,
+  BarChart2,
+  Brain,
+  ShieldCheck,
+  Cpu,
+  Layers,
+  Database,
+  CheckCircle2,
+  ChevronRight,
+  Sparkles,
+} from 'lucide-react';
 
-const diseases = [
+const DISEASES = [
   {
-    icon: <Heart className="w-8 h-8" />,
+    icon: <Heart className="w-6 h-6 text-red-600" />,
     title: 'Heart Disease',
-    description: 'Assess cardiovascular risk based on clinical parameters including blood pressure, cholesterol, and ECG results.',
-    color: 'text-red-500',
-    bg: 'bg-red-50',
-    border: 'border-red-100',
+    tag: 'Cardiovascular',
+    description:
+      'Evaluates risk patterns based on blood pressure, serum cholesterol, ECG results, fluoroscopy, and exercise stress testing.',
+    stats: '13 clinical features • Cleveland UCI',
+    bestModel: 'Random Forest',
     href: '/predict?disease=heart',
+    badgeColor: 'bg-red-50 text-red-700 border-red-200',
   },
   {
-    icon: <Activity className="w-8 h-8" />,
+    icon: <Activity className="w-6 h-6 text-sky-600" />,
     title: 'Diabetes',
-    description: 'Evaluate diabetes risk using glucose levels, BMI, insulin measurements, and patient history.',
-    color: 'text-sky-500',
-    bg: 'bg-sky-50',
-    border: 'border-sky-100',
+    tag: 'Endocrinology',
+    description:
+      'Assesses diabetes likelihood using plasma glucose, insulin levels, BMI, pedigree function, and physiological attributes.',
+    stats: '8 clinical features • Pima Indians',
+    bestModel: 'Random Forest',
     href: '/predict?disease=diabetes',
+    badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
   },
   {
-    icon: <Dna className="w-8 h-8" />,
+    icon: <Dna className="w-6 h-6 text-purple-600" />,
     title: 'Breast Cancer',
-    description: 'Analyze cell nucleus characteristics from fine needle aspirates to predict malignancy risk.',
-    color: 'text-purple-500',
-    bg: 'bg-purple-50',
-    border: 'border-purple-100',
+    tag: 'Oncology',
+    description:
+      'Analyzes 30 morphological features of cell nuclei extracted from fine needle aspirate (FNA) biopsy images.',
+    stats: '30 cytology features • Wisconsin WDBC',
+    bestModel: 'Support Vector Machine',
     href: '/predict?disease=breast_cancer',
+    badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
   },
 ];
 
-const steps = [
-  { step: '01', title: 'Enter Medical Information', desc: 'Fill in the relevant clinical values from the structured form.' },
-  { step: '02', title: 'Data is Processed', desc: 'Your inputs are normalized and prepared using the same preprocessing pipeline as training.' },
-  { step: '03', title: 'ML Model Analyzes', desc: 'The best-performing trained model evaluates the features to produce a prediction.' },
-  { step: '04', title: 'Prediction is Displayed', desc: 'View your risk category, probability score, and the model used—with a clear disclaimer.' },
+const STEPS = [
+  {
+    step: '01',
+    title: 'Input Medical Features',
+    desc: 'Enter verified physiological measurements into structured, field-validated clinical input forms.',
+  },
+  {
+    step: '02',
+    title: 'Pipeline Preprocessing',
+    desc: 'Features undergo median imputation and StandardScaler normalisation identical to model training.',
+  },
+  {
+    step: '03',
+    title: 'Classification Inference',
+    desc: 'The best-performing model evaluates feature interactions to calculate binary risk classification.',
+  },
+  {
+    step: '04',
+    title: 'Risk Estimation & Score',
+    desc: 'Receive calibrated probability percentage, categorical risk banding, and model explanation.',
+  },
 ];
 
-const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
-const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+const METHODOLOGY = [
+  {
+    title: 'Rigorous 4-Algorithm Benchmark',
+    desc: 'Every condition is trained across Logistic Regression, SVM (calibrated), Random Forest, and XGBoost.',
+    icon: <Layers className="w-5 h-5 text-blue-600" />,
+  },
+  {
+    title: 'Zero Leakage Preprocessing',
+    desc: 'Transformers fit strictly on training splits. Inference applies the exact serialized scikit-learn pipeline.',
+    icon: <Database className="w-5 h-5 text-blue-600" />,
+  },
+  {
+    title: 'Composite Model Selection',
+    desc: 'Models are ranked on composite metrics (70% F1-Score + 30% ROC-AUC) prioritizing clinical recall balance.',
+    icon: <ShieldCheck className="w-5 h-5 text-blue-600" />,
+  },
+  {
+    title: 'Stateless & Private',
+    desc: 'No patient telemetry, personal identifiers, or inputs are stored or transmitted beyond inference.',
+    icon: <Cpu className="w-5 h-5 text-blue-600" />,
+  },
+];
+
+const TECH_STACK = [
+  { category: 'Frontend', items: ['React 18', 'Vite', 'Tailwind CSS', 'Framer Motion', 'Recharts', 'Lucide React'] },
+  { category: 'Backend API', items: ['FastAPI', 'Uvicorn', 'Pydantic v2', 'Python 3.11', 'REST Architecture'] },
+  { category: 'Machine Learning', items: ['scikit-learn', 'XGBoost', 'pandas', 'NumPy', 'joblib Pipelines'] },
+];
 
 export default function Home() {
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-sky-500 text-white py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="inline-flex items-center gap-2 bg-white/20 text-white text-sm px-4 py-1.5 rounded-full mb-6 font-medium">
-              <Brain className="w-4 h-4" /> Powered by Machine Learning
+    <div className="space-y-16 sm:space-y-24">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24 border-b border-slate-200 bg-gradient-to-b from-blue-50/70 via-white to-slate-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-100/80 text-blue-800 border border-blue-200/60 mb-6">
+              <Brain className="w-3.5 h-3.5 text-blue-600" />
+              Machine Learning Healthcare Research System
             </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              AI-Powered Disease<br />Risk Prediction
+
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6">
+              AI-Powered Disease <br className="hidden sm:inline" />
+              <span className="text-blue-600">Risk Prediction</span>
             </h1>
-            <p className="text-lg md:text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-              Explore machine-learning based predictions from structured medical data. Trained on real clinical datasets using four state-of-the-art algorithms.
+
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10">
+              Explore machine-learning risk classification built on authentic clinical datasets.
+              Benchmarking Logistic Regression, SVM, Random Forest, and XGBoost with full pipeline reproducibility.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/predict"
-                className="bg-white text-blue-700 font-semibold px-8 py-3.5 rounded-xl hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 shadow-lg"
-              >
-                Start Prediction <ArrowRight className="w-4 h-4" />
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+              <Link to="/predict" className="w-full sm:w-auto btn-primary py-3.5 px-7 text-base shadow-md">
+                Start Prediction
+                <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                to="/performance"
-                className="border-2 border-white/60 text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
-              >
-                <BarChart2 className="w-4 h-4" /> View Model Performance
+              <Link to="/performance" className="w-full sm:w-auto btn-outline py-3.5 px-7 text-base">
+                <BarChart2 className="w-4 h-4" />
+                View Model Performance
               </Link>
             </div>
           </motion.div>
@@ -77,95 +141,139 @@ export default function Home() {
       </section>
 
       {/* Disease Cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900">Supported Disease Predictions</h2>
-          <p className="text-slate-500 mt-3">Select a condition to begin an AI-powered risk assessment</p>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="section-label mb-2">Supported Conditions</p>
+          <h2 className="section-title">Clinical Risk Classifiers</h2>
+          <p className="text-sm text-slate-500 mt-2">
+            Each disease model is independently trained, cross-validated, and deployed using the top-performing algorithm.
+          </p>
         </div>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {diseases.map(d => (
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {DISEASES.map((d) => (
             <motion.div
               key={d.title}
-              variants={fadeUp}
-              className={`bg-white rounded-2xl border ${d.border} shadow-sm hover:shadow-md transition-shadow p-8 flex flex-col`}
+              whileHover={{ y: -3 }}
+              transition={{ duration: 0.2 }}
+              className="card p-6 flex flex-col justify-between"
             >
-              <div className={`${d.bg} ${d.color} w-14 h-14 rounded-xl flex items-center justify-center mb-5`}>
-                {d.icon}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
+                    {d.icon}
+                  </div>
+                  <span className={`text-[0.7rem] font-bold px-2.5 py-1 rounded-full border ${d.badgeColor}`}>
+                    {d.tag}
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{d.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">{d.description}</p>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{d.title}</h3>
-              <p className="text-slate-500 text-sm flex-1 mb-6">{d.description}</p>
-              <Link
-                to={d.href}
-                className="flex items-center gap-2 text-blue-600 font-semibold text-sm hover:gap-3 transition-all"
-              >
-                Predict Risk <ChevronRight className="w-4 h-4" />
-              </Link>
+
+              <div className="border-t border-slate-100 pt-4 mt-2">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
+                  <span>{d.stats}</span>
+                  <span className="font-semibold text-blue-700">Best: {d.bestModel}</span>
+                </div>
+                <Link
+                  to={d.href}
+                  className="flex items-center justify-between w-full py-2.5 px-4 rounded-lg bg-slate-50 hover:bg-blue-50 text-blue-700 text-xs font-bold transition-colors border border-slate-200 hover:border-blue-200"
+                >
+                  <span>Evaluate {d.title}</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </section>
 
       {/* How It Works */}
-      <section className="bg-slate-900 py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white">How It Works</h2>
-            <p className="text-slate-400 mt-3">From input to prediction in four simple steps</p>
+      <section className="bg-slate-900 text-white py-16 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <p className="text-xs font-bold uppercase tracking-wider text-blue-400 mb-2">Workflow</p>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">How Prediction Works</h2>
+            <p className="text-slate-400 text-sm mt-3">
+              From structured clinical telemetry to probability classification through a sealed ML pipeline.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((s, i) => (
-              <motion.div
-                key={s.step}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-5xl font-black text-blue-500/30 mb-3">{s.step}</div>
-                <h3 className="text-white font-semibold mb-2">{s.title}</h3>
-                <p className="text-slate-400 text-sm">{s.desc}</p>
-              </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STEPS.map((s) => (
+              <div key={s.step} className="bg-slate-800/80 rounded-xl p-6 border border-slate-700 flex flex-col">
+                <span className="text-3xl font-black text-blue-400/40 mb-3">{s.step}</span>
+                <h3 className="text-base font-bold text-white mb-2">{s.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed flex-1">{s.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Algorithms */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900">Four Algorithms Compete, Best One Wins</h2>
-          <p className="text-slate-500 mt-3">Every disease model is trained and evaluated across all four algorithms. The highest-performing model is selected automatically.</p>
+      {/* Machine Learning Methodology */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="section-label mb-2">Engineering Standards</p>
+          <h2 className="section-title">Machine Learning Methodology</h2>
+          <p className="text-sm text-slate-500 mt-2">
+            Built using industry best practices for statistical validity, transparency, and data integrity.
+          </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {['Logistic Regression', 'Support Vector Machine', 'Random Forest', 'XGBoost'].map((alg, i) => (
-            <motion.div
-              key={alg}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-xl border border-slate-200 p-6 text-center shadow-sm hover:shadow-md transition-shadow"
-            >
-              <CheckCircle className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-              <p className="font-semibold text-slate-800 text-sm">{alg}</p>
-            </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {METHODOLOGY.map((m) => (
+            <div key={m.title} className="card p-6 flex gap-4">
+              <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                {m.icon}
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">{m.title}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{m.desc}</p>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Disclaimer Banner */}
-      <section className="bg-amber-50 border-t border-amber-200 py-6 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-amber-800 text-sm">
-            ⚠️ <strong>Educational purpose only.</strong> This tool does not provide medical diagnoses. Always consult a qualified healthcare professional for health decisions.{' '}
-            <Link to="/disclaimer" className="underline font-medium">Read full disclaimer →</Link>
+      {/* Technology Stack Grid */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="card p-8 bg-slate-50/60 border border-slate-200">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <p className="section-label mb-1">Architecture</p>
+            <h3 className="text-xl font-bold text-slate-900">Full-Stack Technology Overview</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {TECH_STACK.map((t) => (
+              <div key={t.category} className="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs">
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-3">{t.category}</p>
+                <ul className="space-y-1.5 text-xs text-slate-600">
+                  {t.items.map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Medical Disclaimer Banner */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-6">
+        <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-center">
+          <p className="text-xs sm:text-sm text-amber-900 leading-relaxed">
+            <strong>Educational & Research Notice:</strong> MedPredict AI is an educational machine-learning demonstration.
+            Outputs are experimental statistical estimates, not medical diagnoses. Never make healthcare decisions without
+            consulting a qualified, licensed medical professional.{' '}
+            <Link to="/disclaimer" className="font-semibold underline underline-offset-2 hover:text-amber-700">
+              Read Complete Disclaimer →
+            </Link>
           </p>
         </div>
       </section>

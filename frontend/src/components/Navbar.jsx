@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { Activity, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const links = [
+const NAV_LINKS = [
   { to: '/', label: 'Home' },
   { to: '/predict', label: 'Predict' },
-  { to: '/performance', label: 'Model Performance' },
+  { to: '/performance', label: 'Performance' },
   { to: '/about', label: 'About' },
   { to: '/disclaimer', label: 'Disclaimer' },
 ];
@@ -15,85 +15,95 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
+  const isActive = (to) => to === '/' ? pathname === '/' : pathname.startsWith(to);
+
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200" style={{ boxShadow: '0 1px 3px rgb(0 0 0 / 0.06)' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 text-blue-600 font-bold text-lg">
-            <Activity className="w-6 h-6" />
-            <span>MedPredict AI</span>
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 font-bold text-slate-900 hover:opacity-80 transition-opacity" aria-label="MedPredict AI home">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
+              <Activity className="w-4.5 h-4.5 text-white" strokeWidth={2.5} style={{ width: 18, height: 18 }} />
+            </div>
+            <span className="text-[1.05rem] tracking-tight">MedPredict <span className="text-blue-600">AI</span></span>
           </Link>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-1">
-            {links.map(l => (
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+            {NAV_LINKS.map(({ to, label }) => (
               <Link
-                key={l.to}
-                to={l.to}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === l.to
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-slate-600 hover:text-blue-600 hover:bg-slate-50'
+                key={to}
+                to={to}
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive(to)
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                {l.label}
+                {label}
               </Link>
             ))}
-          </div>
+          </nav>
 
-          <div className="hidden md:flex">
+          {/* CTA + mobile toggle */}
+          <div className="flex items-center gap-2">
             <Link
               to="/predict"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="hidden md:inline-flex btn-primary text-sm py-2 px-4"
             >
               Start Prediction
             </Link>
+            <button
+              onClick={() => setOpen((o) => !o)}
+              className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              aria-expanded={open}
+            >
+              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
-
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setOpen(o => !o)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100"
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <motion.nav
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-slate-100 px-4 pb-4"
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-t border-slate-100 bg-white overflow-hidden"
+            aria-label="Mobile navigation"
           >
-            {links.map(l => (
+            <div className="px-4 pt-2 pb-4 flex flex-col gap-1">
+              {NAV_LINKS.map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setOpen(false)}
+                  className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    isActive(to)
+                      ? 'bg-blue-50 text-blue-700'
+                      : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
               <Link
-                key={l.to}
-                to={l.to}
+                to="/predict"
                 onClick={() => setOpen(false)}
-                className={`block px-4 py-2 mt-1 rounded-lg text-sm font-medium ${
-                  pathname === l.to
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
+                className="mt-2 btn-primary text-sm py-2.5 justify-center"
               >
-                {l.label}
+                Start Prediction
               </Link>
-            ))}
-            <Link
-              to="/predict"
-              onClick={() => setOpen(false)}
-              className="block mt-3 text-center bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
-            >
-              Start Prediction
-            </Link>
-          </motion.div>
+            </div>
+          </motion.nav>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 }
