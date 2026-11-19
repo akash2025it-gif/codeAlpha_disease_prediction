@@ -6,18 +6,18 @@ export default function FormField({ label, tooltip, error, required = false, chi
   const tipRef = useRef(null);
 
   return (
-    <div className="flex flex-col gap-1">
-      <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-        <span>
+    <div className="flex flex-col gap-1 min-w-0 w-full">
+      <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+        <span className="truncate">
           {label}
           {required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
         </span>
 
         {tooltip && (
-          <span className="relative">
+          <span className="relative flex-shrink-0">
             <button
               type="button"
-              className="text-slate-400 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"
+              className="text-slate-400 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400 rounded p-0.5"
               aria-label={`Information about ${label}`}
               onMouseEnter={() => setShowTip(true)}
               onFocus={() => setShowTip(true)}
@@ -30,10 +30,10 @@ export default function FormField({ label, tooltip, error, required = false, chi
               <div
                 ref={tipRef}
                 role="tooltip"
-                className="absolute z-50 bottom-full left-0 mb-2 w-60 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl leading-relaxed pointer-events-none"
+                className="absolute z-50 bottom-full right-0 sm:right-auto sm:left-0 mb-2 w-56 max-w-[85vw] bg-slate-900 text-slate-100 text-xs rounded-lg p-2.5 shadow-xl leading-relaxed pointer-events-none"
               >
                 {tooltip}
-                <div className="absolute top-full left-3 w-2 h-2 bg-slate-800 rotate-45 -translate-y-1" />
+                <div className="absolute top-full right-3 sm:right-auto sm:left-3 w-2 h-2 bg-slate-900 rotate-45 -translate-y-1" />
               </div>
             )}
           </span>

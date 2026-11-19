@@ -101,7 +101,58 @@ app = FastAPI(
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    redirect_slashes=False,
 )
+
+class VercelPathMiddleware:
+    """
+    ASGI middleware ensuring incoming requests on Vercel retain their original request paths.
+    
+    When Vercel processes rewrites (e.g. /(.*) -> /api/index or /main.py),
+    the ASGI scope['path'] can become the rewrite destination (/api/index or /main.py).
+    This middleware detects when scope['path'] is a rewrite artifact and restores the
+    actual requested path from Vercel's edge headers (x-matched-path, x-forwarded-uri,
+    x-original-uri, etc.). It also strips any unexpected '/api' prefix and normalizes
+    trailing slashes so all routes resolve reliably.
+    """
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope.get("type") == "http":
+            path = scope.get("path", "")
+            # If path points to the serverless function file/destination
+            if path in ("/main.py", "/api/index", "/api/index.py", "/api", "/api/"):
+                headers = dict(scope.get("headers", []))
+                for header_name in (b"x-matched-path", b"x-forwarded-uri", b"x-original-uri", b"x-rewrite-url"):
+                    val = headers.get(header_name)
+                    if val:
+                        raw_str = val.decode("utf-8", errors="ignore").split("?")[0]
+                        if raw_str and raw_str not in ("/main.py", "/api/index", "/api/index.py"):
+                            scope["path"] = raw_str
+                            scope["raw_path"] = raw_str.encode("utf-8")
+                            break
+                else:
+                    scope["path"] = "/"
+                    scope["raw_path"] = b"/"
+
+            # If path starts with /api/ (e.g. /api/predict/heart), strip prefix so both /predict/... and /api/predict/... work
+            current_path = scope.get("path", "")
+            if current_path.startswith("/api/") and current_path not in ("/api/docs", "/api/redoc", "/api/openapi.json"):
+                new_path = current_path[4:]
+                scope["path"] = new_path
+                scope["raw_path"] = new_path.encode("utf-8")
+
+            # Trailing slash normalization: strip trailing slash for non-root paths
+            current_path = scope.get("path", "")
+            if len(current_path) > 1 and current_path.endswith("/"):
+                normalized = current_path.rstrip("/")
+                scope["path"] = normalized
+                scope["raw_path"] = normalized.encode("utf-8")
+
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelPathMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

@@ -93,174 +93,190 @@ export default function DiabetesForm({ onResult, onLoading }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-full">
       {/* Sample preset buttons */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-sky-50/60 border border-sky-100 rounded-xl">
         <span className="text-xs font-semibold text-sky-900 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-sky-600" />
-          Test Sample Profiles:
+          <Sparkles className="w-3.5 h-3.5 text-sky-600 flex-shrink-0" />
+          <span>Test Sample Profiles (Pima Indians):</span>
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => applyPreset('lowerRisk')}
-            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-sky-700 border border-slate-200 rounded-lg hover:border-sky-300 transition-colors"
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-sky-700 border border-slate-200 rounded-lg hover:border-sky-300 transition-colors cursor-pointer"
           >
             Load Lower Risk Sample
           </button>
           <button
             type="button"
             onClick={() => applyPreset('higherRisk')}
-            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-red-700 border border-slate-200 rounded-lg hover:border-red-300 transition-colors"
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-red-700 border border-slate-200 rounded-lg hover:border-red-300 transition-colors cursor-pointer"
           >
             Load Higher Risk Sample
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <FormField
-          label="Pregnancies"
-          tooltip="Number of times pregnant (0 if never pregnant or male)"
-          error={errors.Pregnancies}
-          required
-        >
-          <input
-            type="number"
-            value={form.Pregnancies}
-            onChange={(e) => set('Pregnancies', e.target.value)}
-            className="field-input"
-            min="0"
-            max="20"
-          />
-        </FormField>
+      {/* 1. Glycemic & Metabolic Biomarkers */}
+      <div className="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200/80">
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-sky-600"></span>
+          1. Glycemic & Metabolic Laboratory Telemetry
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <FormField
+            label="Plasma Glucose (mg/dL)"
+            tooltip="Plasma glucose concentration at 2 hours in an oral glucose tolerance test"
+            error={errors.Glucose}
+            required
+          >
+            <input
+              type="number"
+              value={form.Glucose}
+              onChange={(e) => set('Glucose', e.target.value)}
+              className="field-input"
+              min="0"
+              max="300"
+            />
+          </FormField>
 
-        <FormField
-          label="Plasma Glucose (mg/dL)"
-          tooltip="Plasma glucose concentration at 2 hours in an oral glucose tolerance test"
-          error={errors.Glucose}
-          required
-        >
-          <input
-            type="number"
-            value={form.Glucose}
-            onChange={(e) => set('Glucose', e.target.value)}
-            className="field-input"
-            min="0"
-            max="300"
-          />
-        </FormField>
+          <FormField
+            label="Serum Insulin (mu U/ml)"
+            tooltip="2-Hour serum insulin concentration in mu U/ml"
+            error={errors.Insulin}
+            required
+          >
+            <input
+              type="number"
+              value={form.Insulin}
+              onChange={(e) => set('Insulin', e.target.value)}
+              className="field-input"
+              min="0"
+              max="900"
+            />
+          </FormField>
 
-        <FormField
-          label="Diastolic BP (mm Hg)"
-          tooltip="Diastolic blood pressure in mm Hg"
-          error={errors.BloodPressure}
-          required
-        >
-          <input
-            type="number"
-            value={form.BloodPressure}
-            onChange={(e) => set('BloodPressure', e.target.value)}
-            className="field-input"
-            min="0"
-            max="200"
-          />
-        </FormField>
+          <FormField
+            label="Diabetes Pedigree Function"
+            tooltip="Genetic risk score calculating diabetes history in biological relatives"
+            error={errors.DiabetesPedigreeFunction}
+            required
+          >
+            <input
+              type="number"
+              step="0.001"
+              value={form.DiabetesPedigreeFunction}
+              onChange={(e) => set('DiabetesPedigreeFunction', e.target.value)}
+              className="field-input"
+              min="0"
+              max="3"
+            />
+          </FormField>
+        </div>
+      </div>
 
-        <FormField
-          label="Skin Thickness (mm)"
-          tooltip="Triceps skin fold thickness in mm (anthropometric measurement)"
-          error={errors.SkinThickness}
-          required
-        >
-          <input
-            type="number"
-            value={form.SkinThickness}
-            onChange={(e) => set('SkinThickness', e.target.value)}
-            className="field-input"
-            min="0"
-            max="100"
-          />
-        </FormField>
+      {/* 2. Physical Examination & Demographics */}
+      <div className="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200/80">
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-teal-600"></span>
+          2. Clinical Demographics & Anthropometrics
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <FormField
+            label="Patient Age (years)"
+            tooltip="Patient age in completed years"
+            error={errors.Age}
+            required
+          >
+            <input
+              type="number"
+              value={form.Age}
+              onChange={(e) => set('Age', e.target.value)}
+              className="field-input"
+              min="1"
+              max="120"
+            />
+          </FormField>
 
-        <FormField
-          label="Serum Insulin (mu U/ml)"
-          tooltip="2-Hour serum insulin concentration in mu U/ml"
-          error={errors.Insulin}
-          required
-        >
-          <input
-            type="number"
-            value={form.Insulin}
-            onChange={(e) => set('Insulin', e.target.value)}
-            className="field-input"
-            min="0"
-            max="900"
-          />
-        </FormField>
+          <FormField
+            label="BMI (kg/m²)"
+            tooltip="Body Mass Index = weight in kg / (height in m)²"
+            error={errors.BMI}
+            required
+          >
+            <input
+              type="number"
+              step="0.1"
+              value={form.BMI}
+              onChange={(e) => set('BMI', e.target.value)}
+              className="field-input"
+              min="0"
+              max="70"
+            />
+          </FormField>
 
-        <FormField
-          label="BMI (kg/m²)"
-          tooltip="Body Mass Index = weight in kg / (height in m)²"
-          error={errors.BMI}
-          required
-        >
-          <input
-            type="number"
-            step="0.1"
-            value={form.BMI}
-            onChange={(e) => set('BMI', e.target.value)}
-            className="field-input"
-            min="0"
-            max="70"
-          />
-        </FormField>
+          <FormField
+            label="Diastolic Blood Pressure"
+            tooltip="Diastolic blood pressure in mm Hg"
+            error={errors.BloodPressure}
+            required
+          >
+            <input
+              type="number"
+              value={form.BloodPressure}
+              onChange={(e) => set('BloodPressure', e.target.value)}
+              className="field-input"
+              min="0"
+              max="200"
+            />
+          </FormField>
 
-        <FormField
-          label="Diabetes Pedigree Func."
-          tooltip="A genetic risk score calculating family diabetes history likelihood"
-          error={errors.DiabetesPedigreeFunction}
-          required
-        >
-          <input
-            type="number"
-            step="0.001"
-            value={form.DiabetesPedigreeFunction}
-            onChange={(e) => set('DiabetesPedigreeFunction', e.target.value)}
-            className="field-input"
-            min="0"
-            max="3"
-          />
-        </FormField>
+          <FormField
+            label="Skin Thickness (mm)"
+            tooltip="Triceps skin fold thickness in mm (anthropometric measurement)"
+            error={errors.SkinThickness}
+            required
+          >
+            <input
+              type="number"
+              value={form.SkinThickness}
+              onChange={(e) => set('SkinThickness', e.target.value)}
+              className="field-input"
+              min="0"
+              max="100"
+            />
+          </FormField>
 
-        <FormField
-          label="Age (years)"
-          tooltip="Patient age in completed years"
-          error={errors.Age}
-          required
-        >
-          <input
-            type="number"
-            value={form.Age}
-            onChange={(e) => set('Age', e.target.value)}
-            className="field-input"
-            min="1"
-            max="120"
-          />
-        </FormField>
+          <FormField
+            label="Pregnancies"
+            tooltip="Number of completed pregnancies (0 for male or nulliparous)"
+            error={errors.Pregnancies}
+            required
+          >
+            <input
+              type="number"
+              value={form.Pregnancies}
+              onChange={(e) => set('Pregnancies', e.target.value)}
+              className="field-input"
+              min="0"
+              max="20"
+            />
+          </FormField>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-sky-600 hover:bg-sky-700">
+        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-sky-600 hover:bg-sky-700 cursor-pointer">
           Predict Diabetes Risk
         </button>
         <button
           type="button"
           onClick={handleReset}
-          className="w-full sm:w-auto btn-outline py-3 px-5 text-slate-600 hover:text-slate-900"
+          className="w-full sm:w-auto btn-outline py-3 px-5 text-slate-600 hover:text-slate-900 cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
-          Reset
+          <span>Reset Form</span>
         </button>
       </div>
     </form>

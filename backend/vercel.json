@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "functions": {
+    "api/index.py": {
+      "excludeFiles": "{datasets/**,training/**,preprocessing/**,__pycache__/**,**/__pycache__/**,**/*.pyc,*.db,**/*.db}",
+      "maxDuration": 30,
+      "memory": 1024
+    },
     "main.py": {
       "excludeFiles": "{datasets/**,training/**,preprocessing/**,__pycache__/**,**/__pycache__/**,**/*.pyc,*.db,**/*.db}",
       "maxDuration": 30,
@@ -10,7 +16,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/main.py"
+      "destination": "/api/index"
     }
   ]
 }

@@ -62,7 +62,7 @@ export default function Predict() {
     selected === 'heart' ? HeartForm : selected === 'diabetes' ? DiabetesForm : BreastCancerForm;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14 w-full overflow-x-hidden">
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
         {/* Page Title */}
         <div className="mb-8">
@@ -105,7 +105,7 @@ export default function Predict() {
         </div>
 
         {/* Form Container Card */}
-        <div className="card p-6 sm:p-8 mb-8">
+        <div className="card p-5 sm:p-8 mb-8 w-full max-w-full overflow-hidden">
           <div className="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 className="text-base font-bold text-slate-900">

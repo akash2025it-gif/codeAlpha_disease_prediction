@@ -203,25 +203,25 @@ export default function BreastCancerForm({ onResult, onLoading }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-full">
       {/* Sample preset buttons */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-purple-50/60 border border-purple-100 rounded-xl">
         <span className="text-xs font-semibold text-purple-900 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-          Test Sample Profiles (Wisconsin WDBC):
+          <Sparkles className="w-3.5 h-3.5 text-purple-600 flex-shrink-0" />
+          <span>Test Sample Profiles (Wisconsin WDBC):</span>
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => applyPreset('lowerRisk')}
-            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-purple-700 border border-slate-200 rounded-lg hover:border-purple-300 transition-colors"
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-purple-700 border border-slate-200 rounded-lg hover:border-purple-300 transition-colors cursor-pointer"
           >
             Load Benign Sample
           </button>
           <button
             type="button"
             onClick={() => applyPreset('higherRisk')}
-            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-red-700 border border-slate-200 rounded-lg hover:border-red-300 transition-colors"
+            className="text-xs font-medium px-2.5 py-1.5 bg-white text-slate-700 hover:text-red-700 border border-slate-200 rounded-lg hover:border-red-300 transition-colors cursor-pointer"
           >
             Load Malignant Sample
           </button>
@@ -229,12 +229,12 @@ export default function BreastCancerForm({ onResult, onLoading }) {
       </div>
 
       {GROUPS.map((group) => (
-        <div key={group.label} className="bg-slate-50/60 p-4 sm:p-5 rounded-xl border border-slate-200/80">
-          <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div key={group.label} className="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200/80">
+          <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-purple-600"></span>
             {group.label}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
             {group.fields.map(([key, label, tip]) => (
               <FormField key={key} label={label} tooltip={tip} error={errors[key]} required>
                 <input
@@ -242,7 +242,7 @@ export default function BreastCancerForm({ onResult, onLoading }) {
                   step="any"
                   value={form[key]}
                   onChange={(e) => set(key, e.target.value)}
-                  className="field-input"
+                  className="field-input text-xs sm:text-sm"
                   min="0"
                 />
               </FormField>
@@ -252,16 +252,16 @@ export default function BreastCancerForm({ onResult, onLoading }) {
       ))}
 
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-purple-600 hover:bg-purple-700">
+        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-purple-600 hover:bg-purple-700 cursor-pointer">
           Predict Breast Cancer Risk
         </button>
         <button
           type="button"
           onClick={handleReset}
-          className="w-full sm:w-auto btn-outline py-3 px-5 text-slate-600 hover:text-slate-900"
+          className="w-full sm:w-auto btn-outline py-3 px-5 text-slate-600 hover:text-slate-900 cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
-          Reset
+          <span>Reset Form</span>
         </button>
       </div>
     </form>
