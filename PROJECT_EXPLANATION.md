@@ -175,14 +175,15 @@ Example URL: `POST /predict/heart` with patient measurements in the request body
 
 ## 15. React Frontend
 
-React is a JavaScript library for building interactive web pages.
+React is a modern JavaScript library for building responsive, component-based user interfaces.
 
-Our frontend has five pages:
-- **Home**: Introduction and disease cards
-- **Predict**: Disease selector + form + result
-- **Model Performance**: Charts, metrics table, confusion matrix
-- **About**: Explanations of algorithms and workflow
-- **Disclaimer**: Legal and ethical warnings
+Our application structure includes:
+- **Home**: Platform overview, clinical capabilities, and diagnostic module launchers.
+- **Login**: Clinician authentication portal with evaluator demo credentials.
+- **Register**: Clinician account creation with password strength verification.
+- **Dashboard**: Longitudinal telemetry history table, risk statistics, input parameter inspector, and CSV export.
+- **Predict**: Interactive multi-disease prediction hub with field validation and sample presets.
+- **About**: Architectural documentation, algorithm descriptions, and governance standards.
 
 ---
 
@@ -245,15 +246,12 @@ Importances are shown as percentages in the Model Performance page.
 
 ---
 
-## 20. Future Improvements
+## 20. Future Technical Roadmap
 
-- Add **SHAP** (SHapley Additive exPlanations) for per-prediction explainability
-- Use larger, more diverse datasets
-- Add more diseases (chronic kidney disease, liver cirrhosis, etc.)
-- Implement **cross-validation** for more reliable metric estimation
-- Deploy to cloud infrastructure (e.g., Render, Railway, Vercel)
-- Add authentication and prediction history logging
-- Support for clinical data import (CSV upload)
+- Add **TreeSHAP** and **KernelSHAP** for per-prediction local feature attribution.
+- Expand diagnostic models to additional chronic conditions (e.g., chronic kidney disease, liver cirrhosis).
+- Support for automated bulk clinical dataset imports (CSV file upload).
+- Conformal prediction intervals for bounded confidence reporting.
 
 ---
 

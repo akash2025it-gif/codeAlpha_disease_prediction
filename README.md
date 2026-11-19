@@ -1,300 +1,220 @@
-# MedPredict AI — Disease Prediction from Medical Data
+# MedPredict AI — Clinical Intelligence & Disease Risk Platform
 
 [![Frontend Deployment](https://github.com/akash2025it-gif/codeAlpha_disease_prediction/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/akash2025it-gif/codeAlpha_disease_prediction/actions/workflows/deploy-pages.yml)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2563EB?logo=github)](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.100+-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Live Demo](https://img.shields.io/badge/Live_Application-GitHub_Pages-2563EB?logo=github)](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
+[![FastAPI](https://img.shields.io/badge/Backend_API-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React_19_Vite-61DAFB?logo=react)](https://react.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> A full-stack, machine-learning-driven clinical risk estimation platform that benchmarks four classification algorithms across three authentic medical datasets.
+> A full-stack healthcare clinical intelligence web application delivering machine-learning risk stratification across Cardiovascular Disease, Type-2 Diabetes, and Breast Cytology.
 
 ---
 
-## 1. Project Overview
+## 1. Platform Overview
 
-**MedPredict AI** is a clinical-grade healthcare technology platform designed to evaluate patient disease risk patterns from structured physiological and laboratory data. The project provides an end-to-end solution: from raw dataset curation, missing value imputation, and pipeline serialization in Python, to a high-performance REST API powered by FastAPI, and an accessible, responsive dashboard built with React 19, Vite, and Tailwind CSS.
+**MedPredict AI** is a clinical decision-support and predictive analytics web application designed to evaluate patient disease risk patterns from structured physiological and laboratory telemetry. The application provides an end-to-end clinical workflow:
+- **Clinician Authentication:** Token-based access with encrypted session management.
+- **Clinical Dashboard:** Longitudinal evaluation history, risk distribution metrics, and telemetry audit tools.
+- **Diagnostic Prediction Modules:** Validated machine-learning classification pipelines for Heart Disease, Diabetes, and Breast Cancer.
+- **Real-Time Inference:** High-throughput serverless REST API powered by FastAPI.
+- **Modern Responsive Interface:** Healthcare SaaS frontend built with React 19, Vite, and Tailwind CSS.
 
-### Live Application Links
-- **Frontend Dashboard (GitHub Pages):** [https://akash2025it-gif.github.io/codeAlpha_disease_prediction/](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
-- **Live Prediction API (Vercel):** [https://backend-teal-theta-65.vercel.app](https://backend-teal-theta-65.vercel.app)
+### Live Production Endpoints
+- **Web Application (GitHub Pages):** [https://akash2025it-gif.github.io/codeAlpha_disease_prediction/](https://akash2025it-gif.github.io/codeAlpha_disease_prediction/)
+- **Prediction API (Vercel):** [https://backend-teal-theta-65.vercel.app](https://backend-teal-theta-65.vercel.app)
 - **Interactive API Documentation (Swagger UI):** [https://backend-teal-theta-65.vercel.app/docs](https://backend-teal-theta-65.vercel.app/docs)
 
 ---
 
-## 2. Project Objectives
+## 2. Key Capabilities
 
-1. **Empirical Algorithm Benchmarking:** Systematically train and compare four core classification algorithms (**Logistic Regression**, **Support Vector Machines (SVM)**, **Random Forest**, and **XGBoost**) for each disease.
-2. **Leakage-Free ML Pipelines:** Ensure 100% equivalence between training and inference using serialized `scikit-learn` `Pipeline` objects (median imputation + `StandardScaler`).
-3. **Calibrated Probabilistic Scoring:** Provide transparent risk bandings (**Lower Risk [0–30%]**, **Moderate Risk [31–60%]**, **Higher Risk [61–100%]**) accompanied by model interpretability metrics.
-4. **Professional Healthcare UX:** Deliver a modern, accessible interface with field validation, sample patient presets, interactive Recharts visualizations, and comprehensive legal disclaimers.
+### 🔐 Clinician Authentication & Security
+- **Token-Based Security:** Cryptographically signed HS256 JWT bearer tokens for stateful user authorization.
+- **PBKDF2 Password Hashing:** Passwords hashed with standard library `hashlib.pbkdf2_hmac` using unique 16-byte cryptographic salts and 100,000 rounds of SHA-256.
+- **Clinician Registration & Login:** Dedicated authentication pages with password strength verification and field validation.
+- **Evaluator Access:** Pre-configured demo clinician credentials (`doctor@medpredict.ai` / `MedicalAI2026!`) with a one-click **"Fill Demo"** button on the sign-in page.
 
----
+### 📊 Clinical Intelligence Dashboard
+- **Longitudinal Telemetry History:** Automatically records each prediction run by an authenticated clinician.
+- **Risk Categorization & Search:** Real-time filtering by condition (`ALL`, `Heart`, `Diabetes`, `Breast Cancer`) and risk level (`Lower Risk`, `Moderate Risk`, `Higher Risk`).
+- **Telemetry Inspection Modal:** Audit the exact laboratory and physiological inputs that generated any historical prediction.
+- **Clinical Data Export:** One-click **Export CSV** function to download patient telemetry logs for clinical records and reporting.
+- **Dual-Layer Persistence:** Client-side `localStorage` synchronization preserves historical records across browser sessions and serverless container rotations.
 
-## 3. Key Features
-
-- **Multi-Disease Risk Assessment:**
-  - **Heart Disease:** Cardiovascular risk from 13 clinical biomarkers (Cleveland Clinic dataset).
-  - **Diabetes:** Metabolic status from 8 diagnostic indicators (Pima Indians dataset).
-  - **Breast Cancer:** Cytological malignancy classification from 30 cell nucleus features (Wisconsin WDBC dataset).
-- **Automated Model Selection:** Evaluates candidate models on holdout sets and automatically deploys the best algorithm based on a composite score: \(0.70 \times \text{F1} + 0.30 \times \text{ROC-AUC}\).
-- **Interactive Model Performance Dashboard:**
-  - Real-time comparison bar charts for Accuracy, Precision, Recall, F1-Score, and ROC-AUC.
-  - Interactive confusion matrix breakdowns (True Positives, True Negatives, False Positives, False Negatives).
-  - Feature importance ranking for tree ensemble models.
-- **Clinician Authentication & Security:**
-  - Token-based JWT authentication with PBKDF2-HMAC-SHA256 password hashing.
-  - Dedicated Clinician Portal with instant demo login for evaluators (`doctor@medpredict.ai` / `MedicalAI2026!`).
-- **Executive Clinician Dashboard:**
-  - Longitudinal patient telemetry tracking with risk classification filters (Heart, Diabetes, Oncology).
-  - Risk distribution meters, modal parameter inspection, and one-click CSV export.
-  - Quick-start evaluation cards for all three disease modules.
-- **Sample Patient Profiles:** One-click presets ("Load Lower Risk" and "Load Higher Risk") to rapidly test realistic clinical scenarios without manual data entry.
-- **Zero-PII Privacy Architecture:** Designed with clinical research privacy: no patient identifiers, national IDs, or confidential records are collected.
+### 🧬 Disease Prediction Modules
+- **Heart Disease Risk Evaluation:** 13 clinical biomarkers (Cleveland Clinic cohort) evaluating resting blood pressure, serum cholesterol, resting ECG, fluoroscopy vessels, and exercise treadmill depression.
+- **Type-2 Diabetes Risk Assessment:** 8 physiological features (Pima Indians cohort) assessing fasting glucose concentration, 2-hour serum insulin, BMI, and diabetes pedigree function.
+- **Breast Cancer Cytology Classification:** 30 fine needle aspirate (FNA) cell nuclei morphological features (Wisconsin WDBC cohort) determining Benign vs. Malignant classification.
+- **Sample Clinical Presets:** One-click presets ("Load Lower Risk Sample" and "Load Higher Risk Sample") to evaluate typical patient profiles without manual data entry.
+- **Calibrated Probabilistic Scoring:** Outputs precise probability percentages, risk categories, and narrative clinical interpretations.
 
 ---
 
-## 4. Application Architecture
+## 3. System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     USER WEB BROWSER                        │
-│         React 19 + Vite SPA (Hosted on GitHub Pages)        │
+│                    HEALTHCARE WEB CLIENT                    │
+│      React 19 + Vite SPA (Hosted on GitHub Pages)           │
+│  - Authentication Context & Token Session Storage           │
+│  - Clinician Dashboard, Telemetry Table & CSV Export        │
+│  - Structured Clinical Input Forms with Pre-fill Presets    │
 └──────────────┬───────────────────────────────▲──────────────┘
                │                               │
-       POST /predict/heart                     │ JSON Risk Prediction
-       POST /predict/diabetes                  │ & Calibration Score
-       GET  /metrics                           │
+        POST /predict/heart                    │ JSON Risk Prediction,
+        POST /auth/login                       │ Calibrated Probability
+        GET  /history                          │ & Clinician Telemetry
                ▼                               │
 ┌──────────────────────────────────────────────┴──────────────┐
-│                    FASTAPI BACKEND SERVICE                  │
-│       Python 3.11 / ASGI (Hosted on Vercel Serverless)      │
-│  - Input validation via Pydantic v2 schemas                 │
-│  - CORS Middleware & safe error handling                    │
-│  - Auto-scaled serverless compute with 1024MB RAM           │
+│                  FASTAPI BACKEND SERVICE                    │
+│        Python 3.11 / ASGI (Hosted on Vercel Serverless)     │
+│  - Pydantic v2 schema validation & safe error handling      │
+│  - PBKDF2-HMAC password hashing & HS256 JWT tokens          │
+│  - SQLite telemetry database (write-safe /tmp path)         │
+│  - Auto-scaled serverless execution (1024MB RAM, 30s)       │
 └──────────────┬──────────────────────────────────────────────┘
                │
                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│               SERIALIZED MACHINE LEARNING PIPELINE          │
-│       scikit-learn Pipeline (joblib model artifacts)        │
-│  1. SimpleImputer (strategy = 'median')                     │
-│  2. StandardScaler (unit variance scaling)                  │
-│  3. Trained Classifier (Random Forest / Calibrated SVM)     │
+│              SERIALIZED MACHINE LEARNING PIPELINES          │
+│        scikit-learn Pipelines (joblib model artifacts)      │
+│  1. SimpleImputer (median missing-value imputation)         │
+│  2. StandardScaler (unit variance feature normalisation)    │
+│  3. Production Classifiers (Random Forest / Calibrated SVM) │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 5. Technology Stack
+## 4. Technology Stack
 
 | Layer | Technologies |
 |---|---|
-| **Frontend UI** | React 19, Vite 8, React Router v7, Tailwind CSS v4 |
-| **Animation & Charts** | Framer Motion, Recharts, Lucide React Icons |
-| **HTTP Client** | Axios (centralized in `src/services/api.js`) |
-| **Backend API** | FastAPI 0.100+, Uvicorn (ASGI), Pydantic v2 |
-| **Machine Learning** | scikit-learn 1.9+, XGBoost 3.4+, NumPy, pandas, SciPy |
-| **Serialization** | joblib (Pipeline persistence) |
-| **Deployment** | GitHub Actions (Pages SPA) + Render Web Service |
+| **Frontend Framework** | React 19, Vite 8, React Router v7 |
+| **Styling & Icons** | Tailwind CSS v4, Lucide React Icons |
+| **Animation & Charts** | Framer Motion, Recharts |
+| **HTTP Client** | Axios (centralized in `src/services/api.js` with auth interceptors) |
+| **Backend Framework** | FastAPI 0.100+, Uvicorn (ASGI), Pydantic v2 |
+| **Security & Cryptography** | PBKDF2-HMAC-SHA256, HMAC-SHA256 JWT tokens |
+| **Database** | SQLite (ephemeral `/tmp` serverless path with frontend dual-caching) |
+| **Machine Learning** | scikit-learn, XGBoost (training suite), NumPy, pandas, SciPy, joblib |
+| **Hosting & Deployment** | GitHub Pages (Frontend SPA) + Vercel Serverless (Backend API) |
 
 ---
 
-## 6. Supported Diseases & Datasets
+## 5. Diagnostic Datasets & Model Benchmarks
 
-| Condition | Dataset Origin | Sample Size | Feature Count | Target Variable | Selected Best Model |
+| Condition | Dataset Origin | Records | Features | Production Model | Benchmark Metrics |
 |---|---|---|---|---|---|
-| **Heart Disease** | UCI Cleveland Clinic | 303 records | 13 features | 0: Absence, 1: Presence | **Random Forest** (F1: 0.9000, AUC: 0.9589) |
-| **Diabetes** | NIDDK Pima Indians | 768 records | 8 features | 0: Negative, 1: Positive | **Random Forest** (F1: 0.6667, AUC: 0.8241) |
-| **Breast Cancer** | Wisconsin Diagnostic (WDBC) | 569 records | 30 features | 0: Benign, 1: Malignant | **Calibrated SVM** (F1: 0.9762, AUC: 0.9954) |
+| **Heart Disease** | UCI Cleveland Clinic | 303 | 13 | **Random Forest** | Accuracy: 88.5%, F1: 0.9000, ROC-AUC: 0.9589 |
+| **Type-2 Diabetes** | NIDDK Pima Indians | 768 | 8 | **Random Forest** | Accuracy: 79.2%, F1: 0.6667, ROC-AUC: 0.8241 |
+| **Breast Cancer** | Wisconsin WDBC | 569 | 30 | **Calibrated SVM** | Accuracy: 98.2%, F1: 0.9762, ROC-AUC: 0.9954 |
 
-*Note: All datasets are established medical cohorts. The training script automatically downloads and verifies dataset files into `backend/datasets/`.*
-
----
-
-## 7. Machine Learning Methodology
-
-1. **Missing Data Handling:** In datasets such as Pima Indians Diabetes, physiological zeros (e.g., zero blood pressure or zero glucose) represent missing records and are imputed with feature medians.
-2. **Feature Normalization:** Standardized through unit variance transformations to prevent features with wide scales from dominating gradient steps.
-3. **Cross-Validation & Holdout Testing:** Models are trained on an 80% split and tested on a stratified 20% holdout split to preserve class balances.
-4. **SVM Calibration:** Support Vector Machines employ Platt scaling / cross-validated probability calibration (`CalibratedClassifierCV`) to output true posterior probabilities.
-5. **Model Selection Criterion:**
+### Preprocessing & Engineering Standards
+1. **Zero Data Leakage:** Preprocessing transformations fit strictly on training splits.
+2. **Biological Zero Imputation:** Physiological zeros in blood pressure, glucose, and skin thickness are treated as missing values and imputed with training set medians.
+3. **Feature Standardization:** `StandardScaler` standardizes variables to zero mean and unit variance.
+4. **Probability Calibration:** Support Vector Machines utilize Platt scaling (`CalibratedClassifierCV`) to output well-calibrated posterior probabilities.
+5. **Selection Objective:** Candidate models are ranked on holdout validation data using a composite score:
    $$\text{Composite Score} = 0.70 \times \text{F1-Score} + 0.30 \times \text{ROC-AUC}$$
 
 ---
 
-## 8. Repository Structure
+## 6. Repository Layout
 
 ```
-disease-prediction/
+codeAlpha_disease_prediction/
 │
 ├── .github/
 │   └── workflows/
-│       └── deploy-pages.yml          # GitHub Pages build and deploy workflow
+│       └── deploy-pages.yml          # GitHub Pages build and deployment workflow
 │
 ├── backend/
-│   ├── main.py                       # FastAPI application & route declarations
-│   ├── requirements.txt              # Production runtime dependencies
-│   ├── requirements-training.txt     # ML training dependencies (includes XGBoost)
+│   ├── main.py                       # FastAPI application, CORS & route declarations
+│   ├── requirements.txt              # Production runtime inference dependencies (~110 MB)
+│   ├── requirements-training.txt     # Complete training dependencies (includes XGBoost)
+│   ├── vercel.json                   # Vercel serverless configuration (1024MB, 30s timeout)
 │   ├── datasets/
-│   │   ├── download_datasets.py      # Automated data acquisition script
-│   │   ├── heart_disease.csv         # Cleveland Heart Disease data
-│   │   ├── diabetes.csv              # Pima Indians Diabetes data
-│   │   └── breast_cancer.csv         # Wisconsin Diagnostic Breast Cancer data
+│   │   ├── download_datasets.py      # Automated dataset downloader & validator
+│   │   ├── heart_disease.csv         # Cleveland Heart Disease cohort data
+│   │   ├── diabetes.csv              # Pima Indians Diabetes cohort data
+│   │   └── breast_cancer.csv         # Wisconsin Diagnostic Breast Cancer cohort data
 │   ├── models/
-│   │   ├── heart_model.pkl           # Best trained Heart Disease pipeline
-│   │   ├── diabetes_model.pkl        # Best trained Diabetes pipeline
-│   │   ├── breast_cancer_model.pkl   # Best trained Breast Cancer pipeline
-│   │   └── metrics.json              # Empirical evaluation metrics & importances
+│   │   ├── heart_model.pkl           # Serialized Heart Disease pipeline
+│   │   ├── diabetes_model.pkl        # Serialized Diabetes pipeline
+│   │   ├── breast_cancer_model.pkl   # Serialized Breast Cancer pipeline
+│   │   └── metrics.json              # Model evaluation metrics & feature importances
 │   ├── preprocessing/
 │   │   └── pipeline.py               # Preprocessing pipelines & model factories
 │   ├── schemas/
-│   │   └── models.py                 # Pydantic request & response schemas
+│   │   ├── auth.py                   # Pydantic schemas for authentication & history
+│   │   └── models.py                 # Pydantic schemas for prediction requests & responses
 │   ├── training/
 │   │   └── train_all.py              # 4-algorithm benchmark training suite
 │   └── utils/
-│       └── predict.py                # Prediction inference utilities
+│       ├── auth.py                   # Password hashing, JWT creation & token validation
+│       ├── db.py                     # SQLite database manager & telemetry queries
+│       └── predict.py                # Prediction inference & probability calibration
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx            # Responsive navigation header
-│   │   │   ├── Footer.jsx            # Application footer & medical notices
-│   │   │   ├── FormField.jsx         # Accessible form field with tooltip & validation
-│   │   │   ├── PredictionCard.jsx    # Visual risk gauge & prediction results
+│   │   │   ├── Navbar.jsx            # SaaS navigation header with auth state & user menu
+│   │   │   ├── Footer.jsx            # Application footer with regulatory notices
+│   │   │   ├── FormField.jsx         # Field-level validation & clinical range tooltips
+│   │   │   ├── PredictionCard.jsx    # Animated probability gauge & risk classification
 │   │   │   └── forms/
-│   │   │       ├── HeartForm.jsx     # 13-feature Heart Disease form with presets
-│   │   │       ├── DiabetesForm.jsx  # 8-feature Diabetes form with presets
-│   │   │       └── BreastCancerForm.jsx # 30-feature WDBC grouped form with presets
+│   │   │       ├── HeartForm.jsx     # 13-feature Heart Disease form with sample presets
+│   │   │       ├── DiabetesForm.jsx  # 8-feature Diabetes form with sample presets
+│   │   │       └── BreastCancerForm.jsx # 30-feature WDBC form with sample presets
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx       # Global authentication provider & session state
 │   │   ├── pages/
-│   │   │   ├── Home.jsx              # Landing page
-│   │   │   ├── Predict.jsx           # Tabbed prediction interface
-│   │   │   ├── Performance.jsx       # Analytics dashboard & Recharts charts
-│   │   │   ├── About.jsx             # Technical methodology documentation
-│   │   │   └── Disclaimer.jsx        # Dedicated medical & legal disclaimer
+│   │   │   ├── Home.jsx              # Healthcare SaaS landing page
+│   │   │   ├── Login.jsx             # Clinician portal login with demo credentials
+│   │   │   ├── Register.jsx          # Clinician account registration
+│   │   │   ├── Dashboard.jsx         # Telemetry dashboard, history table & CSV export
+│   │   │   ├── Predict.jsx           # Diagnostic prediction hub with tab navigation
+│   │   │   ├── Performance.jsx       # Benchmark evaluation charts & confusion matrices
+│   │   │   └── About.jsx             # Clinical informatics & architectural documentation
 │   │   ├── services/
-│   │   │   └── api.js                # Centralized Axios API service
-│   │   ├── App.jsx                   # Application router (React Router v7)
+│   │   │   └── api.js                # Centralized Axios client with Bearer auth injection
+│   │   ├── App.jsx                   # Application router & SPA route mapping
 │   │   ├── index.css                 # Design tokens & Tailwind CSS styling
 │   │   └── main.jsx                  # React application entry point
-│   ├── index.html
+│   ├── .env.development              # Dev environment (http://127.0.0.1:8000)
+│   ├── .env.production               # Production API target (Vercel backend)
 │   ├── package.json
 │   └── vite.config.js
 │
-├── render.yaml                       # Render Web Service blueprint
 ├── .gitignore
-├── README.md
-└── PROJECT_EXPLANATION.md            # Plain-English technical explanation
+├── README.md                         # Production platform documentation
+└── PROJECT_EXPLANATION.md            # Plain-English technical & clinical breakdown
 ```
 
 ---
 
-## 9. Local Installation & Setup
-
-### Prerequisites
-- **Python:** 3.10, 3.11, or 3.12 (Python 3.14 compatible)
-- **Node.js:** v18, v20, or v22 (LTS recommended)
-- **Git**
-
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/akash2025it-gif/codeAlpha_disease_prediction.git
-cd codeAlpha_disease_prediction
-```
-
-### Step 2: Backend Setup
-```bash
-cd backend
-
-# Create virtual environment
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Step 3: Train Machine Learning Models
-```bash
-# (Optional: models are already pre-trained and serialized in backend/models/)
-pip install -r requirements-training.txt
-python training/train_all.py
-```
-
-### Step 4: Run FastAPI Server
-```bash
-uvicorn main:app --reload --port 8000
-```
-- API Base: `http://127.0.0.1:8000`
-- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
-
-### Step 5: Frontend Setup
-Open a new terminal:
-```bash
-cd frontend
-
-# Install npm packages
-npm install
-
-# Start Vite development server
-npm run dev
-```
-- Frontend Dashboard: `http://localhost:5173`
-
----
-
-## 10. Environment Configuration
-
-### Frontend (`frontend/.env`)
-```ini
-# Base URL for API requests.
-# In local development:
-VITE_API_URL=http://127.0.0.1:8000
-
-# In production (set as a GitHub Actions Secret):
-# VITE_API_URL=https://your-backend.onrender.com
-```
-
-### Frontend (`frontend/.env`)
-```ini
-# Base URL for API requests.
-# In local development:
-VITE_API_URL=http://127.0.0.1:8000
-
-# In production (automatically configured for Vercel backend):
-VITE_API_URL=https://backend-teal-theta-65.vercel.app
-```
-
-### Production Deployment Variables
-When deploying frontend to GitHub Pages:
-1. The GitHub Actions workflow (`deploy-pages.yml`) automatically falls back to `https://backend-teal-theta-65.vercel.app`.
-2. To point to a custom backend domain, set repository secret `VITE_API_URL` under **Settings → Secrets and variables → Actions**.
-
----
-
-## 11. API Specification
+## 7. API Specification
 
 | Method | Endpoint | Request Body | Auth | Description |
 |---|---|---|---|---|
-| `GET` | `/` | None | Public | API identity, health status, and documentation links |
-| `GET` | `/health` | None | Public | Service health check and loaded model inventory |
-| `GET` | `/models` | None | Public | Metadata and sample counts for all active models |
-| `GET` | `/metrics` | None | Public | Full benchmark evaluation metrics (all 4 algorithms) |
-| `GET` | `/metrics/{disease}` | None | Public | Metrics for `heart`, `diabetes`, or `breast_cancer` |
+| `GET` | `/` | None | Public | Service identity, operational status, and documentation links |
+| `GET` | `/health` | None | Public | System health check and verified model inventory |
+| `GET` | `/models` | None | Public | Metadata, features, and sample counts for active models |
+| `GET` | `/metrics` | None | Public | Model evaluation metrics across all four algorithms |
+| `GET` | `/metrics/{disease}` | None | Public | Detailed metrics for `heart`, `diabetes`, or `breast_cancer` |
 | `POST` | `/auth/register` | JSON (`UserRegisterInput`) | Public | Register new clinician account |
-| `POST` | `/auth/login` | JSON (`UserLoginInput`) | Public | Authenticate clinician; returns JWT bearer token |
+| `POST` | `/auth/login` | JSON (`UserLoginInput`) | Public | Authenticate clinician; returns signed JWT bearer token |
 | `GET` | `/auth/me` | None | Bearer | Fetch authenticated clinician profile |
 | `GET` | `/history` | None | Bearer | Fetch clinician's longitudinal prediction history |
 | `POST` | `/history` | JSON (`SaveHistoryInput`) | Bearer | Explicitly save a prediction record |
-| `DELETE` | `/history/{id}` | None | Bearer | Delete a specific prediction record |
-| `DELETE` | `/history` | None | Bearer | Clear all prediction history for current user |
-| `POST` | `/predict/heart` | JSON (`HeartDiseaseInput`) | Optional | Inference endpoint for Heart Disease (auto-saved if auth) |
-| `POST` | `/predict/diabetes` | JSON (`DiabetesInput`) | Optional | Inference endpoint for Diabetes (auto-saved if auth) |
-| `POST` | `/predict/breast-cancer` | JSON (`BreastCancerInput`) | Optional | Inference endpoint for Breast Cancer (auto-saved if auth) |
+| `DELETE` | `/history/{id}` | None | Bearer | Delete a specific prediction record (multi-tenant isolated) |
+| `DELETE` | `/history` | None | Bearer | Clear all prediction history for current clinician |
+| `POST` | `/predict/heart` | JSON (`HeartDiseaseInput`) | Optional | Heart Disease inference (auto-saved to history if auth) |
+| `POST` | `/predict/diabetes` | JSON (`DiabetesInput`) | Optional | Diabetes inference (auto-saved to history if auth) |
+| `POST` | `/predict/breast-cancer` | JSON (`BreastCancerInput`) | Optional | Breast Cancer inference (auto-saved to history if auth) |
 
-### Example Prediction Request
+### Sample Prediction Request
 `POST /predict/heart`
 ```json
 {
@@ -314,13 +234,13 @@ When deploying frontend to GitHub Pages:
 }
 ```
 
-### Example Prediction Response
+### Sample Prediction Response
 ```json
 {
   "disease": "Heart Disease",
   "prediction": 1,
   "result": "Higher Risk",
-  "probability": 0.95,
+  "probability": 0.88,
   "risk_category": "Higher Risk",
   "model": "Random Forest",
   "disclaimer": "Statistical clinical risk evaluation based on validated diagnostic models. Intended for professional decision support; consult a physician for comprehensive medical care."
@@ -329,69 +249,85 @@ When deploying frontend to GitHub Pages:
 
 ---
 
-## 12. Deployment Guide
+## 8. Local Installation & Development
 
-### Backend Deployment (Vercel)
-The backend is configured as a serverless ASGI application via `backend/vercel.json`:
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "main.py": {
-      "excludeFiles": "{datasets/**,training/**,preprocessing/**,__pycache__/**,**/__pycache__/**,**/*.pyc}",
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/main.py"
-    }
-  ]
-}
+### Prerequisites
+- **Python:** 3.10 – 3.12 (Python 3.14/3.15 compatible)
+- **Node.js:** v18, v20, or v22 (LTS recommended)
+- **Git**
+
+### Step 1: Clone Repository
+```bash
+git clone https://github.com/akash2025it-gif/codeAlpha_disease_prediction.git
+cd codeAlpha_disease_prediction
 ```
-**Key Vercel Optimizations:**
-1. **Bundle Size Under 250 MB Limit:** Heavy training dependencies like XGBoost are isolated in `requirements-training.txt`. The runtime `requirements.txt` installs only scikit-learn, SciPy, pandas, and NumPy, resulting in a lean ~110 MB uncompressed function footprint well below the AWS Lambda / Vercel 250 MB ceiling.
-2. **Serverless Rewrites:** Unconditional rewrites route all paths (`/health`, `/models`, `/metrics`, `/predict/*`) to `main.py`.
-3. **Memory & Timeout:** Configured with 1024 MB memory and 30-second execution window to handle cold starts and high-dimensional model evaluations.
-4. **Deploying via Vercel CLI or GitHub:**
-   - Link project: `vercel link` (Project: `backend`, Directory: `backend`)
-   - Deploy to production: `vercel --prod`
+
+### Step 2: Backend Setup
+```bash
+cd backend
+
+# Create and activate virtual environment
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# Install runtime dependencies
+pip install -r requirements.txt
+
+# Start FastAPI server
+uvicorn main:app --reload --port 8000
+```
+- API Root: `http://127.0.0.1:8000`
+- Swagger Documentation: `http://127.0.0.1:8000/docs`
+
+### Step 3: Frontend Setup
+```bash
+# Open a new terminal from project root
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+- Local Application: `http://localhost:5173`
+
+---
+
+## 9. Production Deployment Guide
+
+### Backend Deployment (Vercel Serverless)
+The backend is configured for Vercel Python Serverless via `backend/vercel.json`:
+- **Function Entrypoint:** `main.py`
+- **Memory Allocated:** 1024 MB
+- **Execution Timeout:** 30 seconds
+- **Excluded Files:** Datasets, training notebooks, cache directories, and local databases are excluded to keep the deployment package at ~110 MB, well within Vercel's 250 MB ceiling.
+- **Environment Variables:** Set `JWT_SECRET` in the Vercel Project Settings for production token signing.
 
 ### Frontend Deployment (GitHub Pages)
-The repository includes an automated GitHub Actions deployment workflow (`.github/workflows/deploy-pages.yml`).
-1. Push changes to the `main` branch.
-2. The workflow builds the Vite application with base path `/codeAlpha_disease_prediction/`, injects `VITE_API_URL` pointing to `https://backend-teal-theta-65.vercel.app`, generates `404.html` SPA routing fallback, and deploys directly to GitHub Pages.
+The automated workflow `.github/workflows/deploy-pages.yml` executes on every push to `main`:
+1. Installs Node.js dependencies via `npm ci`.
+2. Compiles production assets via `npm run build` with base path `/codeAlpha_disease_prediction/`.
+3. Injects `VITE_API_URL` pointing to the deployed Vercel backend.
+4. Generates `dist/404.html` SPA routing fallback for client-side deep linking.
+5. Deploys the compiled artifact to GitHub Pages.
 
 ---
 
-## 13. Automated Testing
+## 10. Clinical Decision Support & Regulatory Notice
 
-To run the end-to-end integration test suite:
-```bash
-# Ensure backend is running, then run:
-python -c "
-import urllib.request, json
-res = urllib.request.urlopen('http://127.0.0.1:8000/health')
-print('Health:', json.loads(res.read()))
-"
-```
-Or execute the automated test suite covering all endpoints, schema validations, and risk probability responses.
-
----
-
-## 14. Clinical Decision Support & Regulatory Notice
-
-> **IMPORTANT CLINICAL NOTICE:**
-> MedPredict AI is engineered as a **clinical decision support and risk stratification system**. 
-> The predictions generated by this software are probabilistic statistical risk estimations and **do not constitute standalone medical diagnoses or clinical screening examinations**.
-> Never initiate, alter, or discontinue any medical treatment, prescription, or therapeutic routine without consulting a licensed physician or board-certified clinical specialist.
-> Always seek the counsel of a licensed physician regarding personal symptoms or medical conditions.
+> **IMPORTANT CLINICAL NOTICE:**  
+> MedPredict AI is engineered as a **clinical decision support and risk stratification system**.  
+> The predictions generated by this software are probabilistic statistical risk estimations and **do not constitute standalone medical diagnoses or clinical screening examinations**.  
+> Never initiate, alter, or discontinue any medical treatment, prescription, or therapeutic routine without consulting a licensed physician or board-certified clinical specialist.  
+> Always seek the counsel of a licensed physician regarding personal symptoms or medical conditions.  
 > Users are strictly prohibited from submitting real personally identifiable patient data (PII).
 
 ---
 
-## 15. License
+## 11. License
 
 This project is licensed under the [MIT License](LICENSE).
