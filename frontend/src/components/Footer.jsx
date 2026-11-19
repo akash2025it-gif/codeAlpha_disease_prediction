@@ -1,68 +1,118 @@
 import { Link } from 'react-router-dom';
-import { Activity, ShieldAlert } from 'lucide-react';
+import { Activity, ShieldCheck, Heart, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-400 mt-20">
+    <footer className="bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center">
-                <Activity className="text-white" style={{ width: 14, height: 14 }} strokeWidth={2.5} />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+          {/* Brand Info */}
+          <div className="md:col-span-1 space-y-3">
+            <Link to="/" className="flex items-center gap-2 font-bold text-white">
+              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+                <Activity className="w-4 h-4 text-white" />
               </div>
-              <span className="text-white font-bold text-sm">MedPredict AI</span>
-            </div>
-            <p className="text-xs leading-relaxed text-slate-500 max-w-xs">
-              An educational machine-learning project demonstrating disease risk
-              estimation from structured clinical data.
+              <span className="text-sm font-black tracking-tight text-white">
+                MedPredict <span className="text-blue-400">AI</span>
+              </span>
+            </Link>
+            <p className="text-[0.75rem] text-slate-400 leading-relaxed">
+              Clinical decision-support and disease risk stratification powered by validated
+              machine learning classification pipelines.
             </p>
+            <div className="flex items-center gap-1.5 text-[0.7rem] text-emerald-400">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Zero-PII Processing Architecture</span>
+            </div>
           </div>
 
-          {/* Quick links */}
+          {/* Platform Navigation */}
           <div>
-            <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Navigation</p>
-            <ul className="space-y-2 text-sm">
-              {[
-                ['/', 'Home'],
-                ['/predict', 'Disease Prediction'],
-                ['/performance', 'Model Performance'],
-                ['/about', 'About'],
-                ['/disclaimer', 'Disclaimer'],
-              ].map(([to, label]) => (
-                <li key={to}>
-                  <Link to={to} className="text-slate-500 hover:text-slate-200 transition-colors text-xs">
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <p className="font-bold text-white text-xs uppercase tracking-wider mb-3">Platform</p>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link to="/" className="hover:text-white transition-colors">
+                  Home Overview
+                </Link>
+              </li>
+              <li>
+                <Link to="/predict" className="hover:text-white transition-colors">
+                  Disease Prediction
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="hover:text-white transition-colors">
+                  Clinician Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-white transition-colors">
+                  Methodology & About
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Disclaimer */}
+          {/* Disease Modules */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldAlert className="w-4 h-4 text-amber-500 flex-shrink-0" />
-              <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Important</p>
-            </div>
-            <p className="text-xs leading-relaxed text-slate-500">
-              Predictions are experimental ML outputs and are{' '}
-              <span className="text-amber-400 font-medium">not medical diagnoses</span>.
-              Never use this tool for clinical decisions. Always consult a qualified
-              healthcare professional.{' '}
-              <Link to="/disclaimer" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">
-                Full disclaimer →
-              </Link>
+            <p className="font-bold text-white text-xs uppercase tracking-wider mb-3">
+              Diagnostic Modules
             </p>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link to="/predict?disease=heart" className="hover:text-white transition-colors">
+                  Heart Disease (Cleveland UCI)
+                </Link>
+              </li>
+              <li>
+                <Link to="/predict?disease=diabetes" className="hover:text-white transition-colors">
+                  Diabetes (Pima Indians)
+                </Link>
+              </li>
+              <li>
+                <Link to="/predict?disease=breast_cancer" className="hover:text-white transition-colors">
+                  Breast Cancer (Wisconsin WDBC)
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Machine Learning Standards */}
+          <div>
+            <p className="font-bold text-white text-xs uppercase tracking-wider mb-3">
+              Machine Learning
+            </p>
+            <ul className="space-y-1.5 text-xs text-slate-400">
+              <li>Random Forest (Ensemble)</li>
+              <li>Calibrated SVM (Platt Scaling)</li>
+              <li>Logistic Regression (L2)</li>
+              <li>XGBoost Gradient Boosting</li>
+              <li className="pt-2 text-[0.7rem] text-slate-500">
+                Median Imputation • StandardScaler
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-600">
-            © {new Date().getFullYear()} MedPredict AI — Disease Prediction from Medical Data
-          </p>
-          <p className="text-xs text-slate-700">Educational project — not a medical device</p>
+        {/* Medical Ethics Notice */}
+        <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700/80 mb-8 text-[0.72rem] text-slate-400 leading-relaxed">
+          <strong className="text-slate-200">Clinical Research Notice:</strong> MedPredict AI is an educational
+          machine-learning decision-support research prototype. Outputs are probabilistic statistical risk scores
+          and do NOT constitute medical diagnoses, clinical screenings, or treatment protocols. Always seek the advice
+          of a qualified, licensed medical physician regarding any personal health condition or symptom.
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.72rem] text-slate-500">
+          <p>© {new Date().getFullYear()} MedPredict AI Systems. Engineered for clinical informatics research.</p>
+          <div className="flex items-center gap-4">
+            <Link to="/about" className="hover:text-slate-400 transition-colors">
+              Technology & Ethics
+            </Link>
+            <Link to="/predict" className="hover:text-slate-400 transition-colors">
+              Predictor Console
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

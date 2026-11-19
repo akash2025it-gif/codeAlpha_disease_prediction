@@ -12,6 +12,9 @@ build/
 .venv/
 venv/
 env/
+*.db
+*.sqlite*
+backend/*.db
 
 # === Datasets (download with download_datasets.py) ===
 backend/datasets/*.csv

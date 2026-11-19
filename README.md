@@ -41,8 +41,15 @@
   - Real-time comparison bar charts for Accuracy, Precision, Recall, F1-Score, and ROC-AUC.
   - Interactive confusion matrix breakdowns (True Positives, True Negatives, False Positives, False Negatives).
   - Feature importance ranking for tree ensemble models.
+- **Clinician Authentication & Security:**
+  - Token-based JWT authentication with PBKDF2-HMAC-SHA256 password hashing.
+  - Dedicated Clinician Portal with instant demo login for evaluators (`doctor@medpredict.ai` / `MedicalAI2026!`).
+- **Executive Clinician Dashboard:**
+  - Longitudinal patient telemetry tracking with risk classification filters (Heart, Diabetes, Oncology).
+  - Risk distribution meters, modal parameter inspection, and one-click CSV export.
+  - Quick-start evaluation cards for all three disease modules.
 - **Sample Patient Profiles:** One-click presets ("Load Lower Risk" and "Load Higher Risk") to rapidly test realistic clinical scenarios without manual data entry.
-- **Stateless & Privacy-First:** No patient inputs or telemetry are stored in any persistent database or third-party tracking system.
+- **Zero-PII Privacy Architecture:** Designed with clinical research privacy: no patient identifiers, national IDs, or confidential records are collected.
 
 ---
 
@@ -269,16 +276,23 @@ When deploying frontend to GitHub Pages:
 
 ## 11. API Specification
 
-| Method | Endpoint | Request Body | Description |
-|---|---|---|---|
-| `GET` | `/` | None | API identity, health status, and documentation links |
-| `GET` | `/health` | None | Service health check and loaded model inventory |
-| `GET` | `/models` | None | Metadata and sample counts for all active models |
-| `GET` | `/metrics` | None | Full benchmark evaluation metrics (all 4 algorithms) |
-| `GET` | `/metrics/{disease}` | None | Metrics for `heart`, `diabetes`, or `breast_cancer` |
-| `POST` | `/predict/heart` | JSON (`HeartDiseaseInput`) | Inference endpoint for Heart Disease |
-| `POST` | `/predict/diabetes` | JSON (`DiabetesInput`) | Inference endpoint for Diabetes |
-| `POST` | `/predict/breast-cancer` | JSON (`BreastCancerInput`) | Inference endpoint for Breast Cancer |
+| Method | Endpoint | Request Body | Auth | Description |
+|---|---|---|---|---|
+| `GET` | `/` | None | Public | API identity, health status, and documentation links |
+| `GET` | `/health` | None | Public | Service health check and loaded model inventory |
+| `GET` | `/models` | None | Public | Metadata and sample counts for all active models |
+| `GET` | `/metrics` | None | Public | Full benchmark evaluation metrics (all 4 algorithms) |
+| `GET` | `/metrics/{disease}` | None | Public | Metrics for `heart`, `diabetes`, or `breast_cancer` |
+| `POST` | `/auth/register` | JSON (`UserRegisterInput`) | Public | Register new clinician account |
+| `POST` | `/auth/login` | JSON (`UserLoginInput`) | Public | Authenticate clinician; returns JWT bearer token |
+| `GET` | `/auth/me` | None | Bearer | Fetch authenticated clinician profile |
+| `GET` | `/history` | None | Bearer | Fetch clinician's longitudinal prediction history |
+| `POST` | `/history` | JSON (`SaveHistoryInput`) | Bearer | Explicitly save a prediction record |
+| `DELETE` | `/history/{id}` | None | Bearer | Delete a specific prediction record |
+| `DELETE` | `/history` | None | Bearer | Clear all prediction history for current user |
+| `POST` | `/predict/heart` | JSON (`HeartDiseaseInput`) | Optional | Inference endpoint for Heart Disease (auto-saved if auth) |
+| `POST` | `/predict/diabetes` | JSON (`DiabetesInput`) | Optional | Inference endpoint for Diabetes (auto-saved if auth) |
+| `POST` | `/predict/breast-cancer` | JSON (`BreastCancerInput`) | Optional | Inference endpoint for Breast Cancer (auto-saved if auth) |
 
 ### Example Prediction Request
 `POST /predict/heart`

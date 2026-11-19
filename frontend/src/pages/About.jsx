@@ -3,16 +3,19 @@ import {
   Brain,
   Layers,
   Database,
-  ArrowRight,
-  ShieldAlert,
+  ShieldCheck,
   GitBranch,
   Cpu,
   BarChart2,
-  ExternalLink,
+  Stethoscope,
+  Lock,
+  LineChart,
+  Activity,
+  FileCheck2,
 } from 'lucide-react';
 
 const Section = ({ title, icon, children }) => (
-  <div className="card p-6 sm:p-8 mb-6">
+  <div className="card p-6 sm:p-8 mb-6 bg-white border border-slate-200">
     <div className="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
       <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
         {icon}
@@ -35,7 +38,7 @@ const AlgoCard = ({ name, type, pros, desc, color }) => (
       <p className="text-xs text-slate-600 leading-relaxed mb-3">{desc}</p>
     </div>
     <p className="text-[0.7rem] text-slate-500 font-medium">
-      <strong className="text-slate-700">Key strength:</strong> {pros}
+      <strong className="text-slate-700">Clinical Strength:</strong> {pros}
     </p>
   </div>
 );
@@ -43,186 +46,199 @@ const AlgoCard = ({ name, type, pros, desc, color }) => (
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+      >
         {/* Header */}
         <div className="mb-8">
-          <p className="section-label mb-1">Architecture & Methodology</p>
+          <p className="section-label mb-1">Architecture & Clinical Informatics</p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             About MedPredict AI
           </h1>
           <p className="text-sm text-slate-500 mt-1.5 max-w-2xl">
-            A technical guide to the data preprocessing, model selection, algorithms, and evaluation
-            framework governing this educational machine learning project.
+            A comprehensive guide to the purpose, machine-learning classification algorithms,
+            preprocessing pipelines, and clinical telemetry framework powering MedPredict AI.
           </p>
         </div>
 
-        {/* Live Repository Notice */}
-        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-bold text-blue-900">Open-Source Project Repository</p>
-            <p className="text-xs text-blue-700 mt-0.5">Explore source code, training notebooks, and schemas on GitHub.</p>
-          </div>
-          <a
-            href="https://github.com/akash2025it-gif/codeAlpha_disease_prediction"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 underline underline-offset-2"
-          >
-            <span>View GitHub Repository</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-
-        {/* Section 1: Objective & Medical Context */}
-        <Section title="What is Disease Prediction from Medical Data?" icon={<Brain className="w-4 h-4" />}>
+        {/* Section 1: Purpose & Clinical Context */}
+        <Section title="Purpose & Clinical Problem Statement" icon={<Brain className="w-4 h-4" />}>
           <p>
-            In clinical informatics, <strong>disease risk prediction</strong> refers to the application of
-            probabilistic machine learning models to structured patient records (demographics, vital signs,
-            laboratory assays, and diagnostic readings) to estimate the likelihood of a specific pathological condition.
+            In modern healthcare systems, delayed detection of chronic conditions—specifically
+            cardiovascular disease, glycemic disorders, and malignant tissue transformations—remains
+            a leading contributor to preventable complications.
           </p>
           <p>
-            Unlike diagnostic tests that confirm the direct presence of a pathogen or structural lesion, machine
-            learning models identify multi-dimensional patterns and non-linear risk interactions that may not be
-            immediately apparent from isolated biomarkers.
+            <strong>MedPredict AI</strong> is an enterprise clinical informatics demonstration system
+            designed to evaluate structured patient records (routine laboratory assays, physiological
+            vitals, and biopsy measurements) using supervised machine-learning classification algorithms.
           </p>
-          <p className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-600">
-            <strong>Important Clinical Distinction:</strong> This system produces educational risk assessments,
-            not clinical diagnoses. A high-risk score does not confirm disease, nor does a low-risk score guarantee its absence.
+          <p>
+            By identifying complex multi-factor interactions across physiological markers, the platform
+            computes calibrated probability scores, enabling early risk stratification and providing
+            transparent decision-support indicators for healthcare researchers.
           </p>
         </Section>
 
-        {/* Section 2: What is Classification? */}
-        <Section title="Supervised Classification in Healthcare" icon={<GitBranch className="w-4 h-4" />}>
+        {/* Section 2: Clinical Conditions & Datasets */}
+        <Section title="Medical Focus Areas & Benchmark Datasets" icon={<Database className="w-4 h-4" />}>
           <p>
-            <strong>Classification</strong> is a supervised machine-learning paradigm in which an algorithm learns
-            a mapping function from an input feature vector \(X\) to a discrete categorical label \(y\).
+            The system focuses on three high-impact clinical conditions, each trained on established,
+            peer-reviewed medical benchmark cohorts:
           </p>
-          <p>
-            In this project, each model performs <strong>binary classification</strong>:
-          </p>
-          <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 pl-2">
-            <li><strong>Class 0:</strong> Negative (absence of disease / benign tissue)</li>
-            <li><strong>Class 1:</strong> Positive (presence of disease / malignant tissue)</li>
-          </ul>
-          <p>
-            In addition to binary labels, our models compute <strong>calibrated probabilities</strong> \(P(y = 1 \mid X)\),
-            enabling nuanced clinical risk stratification rather than rigid cutoffs.
-          </p>
-        </Section>
-
-        {/* Section 3: Datasets */}
-        <Section title="Verified Public Datasets" icon={<Database className="w-4 h-4" />}>
-          <p>This project relies exclusively on authentic, peer-reviewed clinical benchmarks:</p>
-          <div className="space-y-3 mt-2">
-            <div className="p-3.5 rounded-lg border border-slate-200 bg-white">
-              <p className="font-bold text-slate-800 text-xs">Heart Disease — Cleveland Clinic Dataset (UCI ML Repository)</p>
-              <p className="text-xs text-slate-600 mt-1">
-                303 patient records with 13 physiological parameters (age, chest pain type, resting BP, serum cholesterol,
-                fasting blood sugar, resting ECG, maximum heart rate, exercise angina, ST depression, slope, fluoroscopy vessels, thallium scan).
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-sm mb-1">Heart Disease</h3>
+              <p className="text-xs text-blue-700 font-semibold mb-2">Cleveland Clinic (UCI)</p>
+              <p className="text-xs text-slate-600">
+                13 clinical features including resting blood pressure, serum cholesterol, ST-depression,
+                and fluoroscopy vessel counts to determine angiographic coronary artery disease risk.
               </p>
             </div>
-            <div className="p-3.5 rounded-lg border border-slate-200 bg-white">
-              <p className="font-bold text-slate-800 text-xs">Diabetes — Pima Indians Diabetes Dataset (NIDDK)</p>
-              <p className="text-xs text-slate-600 mt-1">
-                768 female records with 8 clinical variables (pregnancies, 2-hour plasma glucose, diastolic blood pressure,
-                triceps skinfold thickness, 2-hour serum insulin, BMI, diabetes pedigree score, age). Biologically impossible zero values are treated as missing data.
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-sm mb-1">Type-2 Diabetes</h3>
+              <p className="text-xs text-blue-700 font-semibold mb-2">Pima Indians (NIDDK)</p>
+              <p className="text-xs text-slate-600">
+                8 physiological features including plasma glucose concentration, 2-hour serum insulin,
+                body mass index (BMI), and genetic diabetes pedigree function.
               </p>
             </div>
-            <div className="p-3.5 rounded-lg border border-slate-200 bg-white">
-              <p className="font-bold text-slate-800 text-xs">Breast Cancer — Wisconsin Diagnostic Breast Cancer (WDBC)</p>
-              <p className="text-xs text-slate-600 mt-1">
-                569 fine needle aspirate (FNA) biopsy samples with 30 digitized morphological features computed from cell nuclei
-                (mean, standard error, and worst values for radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension).
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-sm mb-1">Breast Cancer</h3>
+              <p className="text-xs text-blue-700 font-semibold mb-2">Wisconsin WDBC</p>
+              <p className="text-xs text-slate-600">
+                30 morphological features extracted from digitized fine needle aspirate (FNA) cell nuclei
+                images, classifying biopsies as Benign or Malignant.
               </p>
             </div>
           </div>
         </Section>
 
-        {/* Section 4: 4 Algorithms */}
-        <Section title="Four Machine Learning Algorithms" icon={<Layers className="w-4 h-4" />}>
+        {/* Section 3: Machine Learning Algorithms */}
+        <Section title="Machine Learning Classification Algorithms" icon={<Layers className="w-4 h-4" />}>
           <p>
-            Rather than presuming which algorithm is optimal, we train and benchmark four distinct mathematical
-            families of classifiers for each condition:
+            Rather than relying on a single heuristic, every condition was benchmarked across four
+            foundational classification algorithms to identify the optimal inductive bias for each data geometry:
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <AlgoCard
               name="Logistic Regression"
-              type="Generalized Linear Model"
-              desc="Models log-odds using linear combinations of standardized features with L2 regularization."
-              pros="High interpretability, stable baseline, direct coefficient weights."
+              type="Linear Probabilistic"
+              desc="Models log-odds of the target condition as a linear combination of normalized input features with L2 regularization."
+              pros="High interpretability, direct odds-ratio coefficient mapping, fast convergence."
               color="bg-blue-50/50 border-blue-200"
             />
             <AlgoCard
               name="Support Vector Machine (SVM)"
-              type="Maximum Margin Classifier"
-              desc="Maps inputs into high-dimensional space via an RBF kernel to find the optimal separating hyperplane."
-              pros="Exceptional on high-dimensional data (e.g. 30 WDBC features), robust against overfitting."
-              color="bg-sky-50/50 border-sky-200"
+              type="Maximum Margin Hyperplane"
+              desc="Projects features into high-dimensional Hilbert space via RBF kernel with Platt probability scaling."
+              pros="Superior generalization in dense continuous spaces; optimal for 30-feature WDBC cytology."
+              color="bg-purple-50/50 border-purple-200"
             />
             <AlgoCard
               name="Random Forest"
               type="Ensemble / Bagging"
-              desc="Constructs an ensemble of 100 decorrelated decision trees, aggregating predictions via soft voting."
-              pros="Captures non-linear feature interactions, inherently calculates Gini feature importance."
+              desc="Constructs 100 decorrelated decision trees, aggregating classifications via soft voting probabilities."
+              pros="Inherent resilience to multicollinearity and non-linear interactions; top performer for Heart & Diabetes."
               color="bg-emerald-50/50 border-emerald-200"
             />
             <AlgoCard
               name="XGBoost"
-              type="Gradient Boosted Decision Trees"
-              desc="Sequentially trains shallow decision trees, optimizing a custom objective function with gradient descent."
-              pros="State-of-the-art predictive performance on tabular clinical data, robust outlier handling."
+              type="Gradient Boosted Trees"
+              desc="Sequentially fits shallow trees to pseudo-residuals, optimizing regularized loss via second-order gradients."
+              pros="State-of-the-art predictive performance on tabular clinical data with built-in missing value handling."
               color="bg-amber-50/50 border-amber-200"
             />
           </div>
         </Section>
 
-        {/* Section 5: End-to-End Workflow */}
-        <Section title="The End-to-End Pipeline Workflow" icon={<Cpu className="w-4 h-4" />}>
-          <div className="space-y-2.5 text-xs text-slate-700">
+        {/* Section 4: Data Preprocessing Pipeline */}
+        <Section title="Zero-Data-Leakage Preprocessing" icon={<Cpu className="w-4 h-4" />}>
+          <p>
+            A common failure in clinical machine learning is data leakage—allowing information from the test
+            or production set to inadvertently inform training transformations. MedPredict AI prevents this through
+            sealed pipelines:
+          </p>
+          <div className="space-y-2.5 text-xs text-slate-700 pt-2">
             <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">1</span>
-              <span><strong>Data Preprocessing:</strong> Physiological zeros are parsed; SimpleImputer applies median imputation; StandardScaler standardizes unit variance.</span>
+              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">
+                1
+              </span>
+              <span>
+                <strong>Physiological Zero Handling:</strong> Biologically impossible zeros in vitals
+                (such as blood pressure or glucose = 0) are converted to NaN and imputed using median statistics computed solely from training partitions.
+              </span>
             </div>
             <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">2</span>
-              <span><strong>Stratified Holdout Split:</strong> 80% training / 20% test partition maintaining exact class ratios.</span>
+              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">
+                2
+              </span>
+              <span>
+                <strong>Feature Normalization:</strong> Scikit-learn <code className="font-mono bg-white px-1 py-0.5 border rounded">StandardScaler</code> normalizes features to zero mean and unit variance.
+              </span>
             </div>
             <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">3</span>
-              <span><strong>Benchmark Training:</strong> All 4 candidate algorithms fit exclusively to training splits.</span>
+              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">
+                3
+              </span>
+              <span>
+                <strong>Stratified Splitting:</strong> 80/20 train/test partition preserves clinical disease prevalence ratios across folds.
+              </span>
             </div>
             <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">4</span>
-              <span><strong>Model Selection:</strong> Ranked by composite score: \(0.70 \times \text{F1-Score} + 0.30 \times \text{ROC-AUC}\).</span>
-            </div>
-            <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">5</span>
-              <span><strong>Serialization:</strong> Full pipeline (imputer + scaler + estimator) saved as a standalone joblib binary artifact.</span>
-            </div>
-            <div className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">6</span>
-              <span><strong>REST API Inference:</strong> FastAPI parses inputs via Pydantic schemas and executes inference in milliseconds.</span>
+              <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">
+                4
+              </span>
+              <span>
+                <strong>Composite Model Selection:</strong> Ranked by a composite objective: \(0.70 \times \text{F1-Score} + 0.30 \times \text{ROC-AUC}\), ensuring sensitivity is prioritized for clinical safety.
+              </span>
             </div>
           </div>
         </Section>
 
-        {/* Section 6: Limitations & Future Work */}
-        <Section title="Limitations & Future Roadmap" icon={<BarChart2 className="w-4 h-4" />}>
-          <div>
-            <h3 className="font-bold text-slate-800 text-xs mb-2">Current System Limitations:</h3>
-            <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 pl-2">
-              <li>Cohort size constraints (N = 303 to 768 samples) typical of academic benchmark datasets.</li>
-              <li>Potential demographic selection bias inherent in historical collection cohorts.</li>
-              <li>Binary simplification of diseases that exhibit clinical spectrums and complex sub-phenotypes.</li>
-            </ul>
+        {/* Section 5: Platform Architecture & Security */}
+        <Section title="Platform Architecture & Telemetry Security" icon={<Lock className="w-4 h-4" />}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-xs mb-1">Clinician Authentication</h3>
+              <p className="text-xs text-slate-600">
+                PBKDF2-HMAC-SHA256 password hashing with 100,000 rounds and cryptographically signed JWT bearer tokens for secure clinician sessions.
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-xs mb-1">Longitudinal History</h3>
+              <p className="text-xs text-slate-600">
+                Authenticated clinicians can audit previous assessments, inspect input parameters, track cohort risk trends, and export records to CSV.
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-xs mb-1">Zero-PII Privacy</h3>
+              <p className="text-xs text-slate-600">
+                No patient identifiers (such as national ID, full legal name, or medical records number) are collected or stored in the database.
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h3 className="font-bold text-slate-900 text-xs mb-1">Serverless Inference</h3>
+              <p className="text-xs text-slate-600">
+                Lightweight ASGI microservices execute serialized pipelines with sub-150ms latency and high reliability.
+              </p>
+            </div>
           </div>
+        </Section>
 
-          <div className="pt-3 border-t border-slate-100">
-            <h3 className="font-bold text-slate-800 text-xs mb-2">Future Enhancements:</h3>
-            <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 pl-2">
-              <li>Integration of TreeSHAP and KernelSHAP for per-prediction local feature explanations.</li>
-              <li>Expansion to chronic kidney disease (CKD) and liver cirrhosis diagnostic models.</li>
-              <li>Confidence interval estimation via Monte Carlo dropout and conformal prediction.</li>
+        {/* Section 6: Medical Limitations & Governance */}
+        <Section title="Clinical Boundaries & Governance Notice" icon={<FileCheck2 className="w-4 h-4" />}>
+          <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200 text-xs text-amber-950 space-y-2">
+            <p>
+              <strong>Educational & Clinical Research Prototype:</strong> MedPredict AI is engineered for academic research, algorithm validation, and educational demonstrations.
+            </p>
+            <ul className="list-disc list-inside space-y-1 text-amber-900 pl-1">
+              <li>It is NOT certified as Software-as-a-Medical-Device (SaMD) by the FDA, EMA, or any regulatory body.</li>
+              <li>Calculated probabilities represent statistical pattern similarity to historical training data, not an individualized diagnosis.</li>
+              <li>A "Lower Risk" result does not rule out disease; a "Higher Risk" result does not confirm pathology.</li>
+              <li>Never initiate, modify, or cease clinical treatments or prescription medication without consulting a licensed physician.</li>
             </ul>
           </div>
         </Section>

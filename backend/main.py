@@ -1,26 +1,34 @@
 """
-FastAPI backend for Disease Prediction ML Application.
+FastAPI backend for MedPredict AI — Disease Prediction & Clinical SaaS Platform.
 
 Endpoints:
-  GET  /                    - Root info
-  GET  /health              - Health check + models status
-  GET  /models              - Available models info
-  GET  /metrics             - All model training metrics
-  GET  /metrics/{key}       - Metrics for a specific disease
-  POST /predict/heart       - Heart disease prediction
-  POST /predict/diabetes    - Diabetes prediction
+  GET  /                      - Root info
+  GET  /health                - Health check + models status
+  GET  /models                - Available models info
+  GET  /metrics               - All model training metrics
+  GET  /metrics/{key}         - Metrics for a specific disease
+  POST /auth/register         - Clinician/User registration
+  POST /auth/login            - Clinician/User authentication
+  GET  /auth/me               - Current authenticated user profile
+  GET  /history               - Authenticated user's prediction history
+  POST /history               - Save prediction to user history
+  DELETE /history/{id}        - Delete history item
+  DELETE /history             - Clear user's prediction history
+  POST /predict/heart         - Heart disease prediction
+  POST /predict/diabetes      - Diabetes prediction
   POST /predict/breast-cancer - Breast cancer prediction
 """
 
 import os
 import sys
 import logging
+from typing import Optional, List, Dict, Any
 
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -30,16 +38,52 @@ from schemas.models import (
     BreastCancerInput,
     PredictionResponse,
 )
+from schemas.auth import (
+    UserRegisterInput,
+    UserLoginInput,
+    UserResponse,
+    AuthResponse,
+    SaveHistoryInput,
+    HistoryItemResponse,
+)
 from utils.predict import load_metrics, run_prediction
+from utils.auth import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    get_current_user,
+    get_optional_user,
+)
+from utils.db import (
+    init_db,
+    create_user,
+    get_user_by_email,
+    get_user_by_id,
+    save_prediction,
+    get_user_history,
+    delete_history_item,
+    clear_user_history,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Allowed origins — extend this list when the frontend domain changes.
-# "*" is intentionally used for open educational demo projects; for a
-# production clinical system you would restrict this to specific domains.
-# ---------------------------------------------------------------------------
+# Initialize database tables
+init_db()
+
+# Create default demo clinician account if it does not already exist
+try:
+    demo_email = "doctor@medpredict.ai"
+    if not get_user_by_email(demo_email):
+        create_user(
+            email=demo_email,
+            name="Dr. Sarah Mitchell",
+            password_hash=hash_password("MedicalAI2026!"),
+        )
+        logger.info("Created default demo clinician account: doctor@medpredict.ai")
+except Exception as e:
+    logger.warning(f"Demo user creation notice: {e}")
+
 ALLOWED_ORIGINS = [
     "https://akash2025it-gif.github.io",
     "http://localhost:5173",
@@ -49,12 +93,12 @@ ALLOWED_ORIGINS = [
 ]
 
 app = FastAPI(
-    title="MedPredict AI — Disease Prediction API",
+    title="MedPredict AI — Clinical Intelligence & Disease Risk Platform",
     description=(
-        "Machine-learning powered disease risk estimation for Heart Disease, "
-        "Diabetes, and Breast Cancer. Educational purposes only — not a medical device."
+        "Enterprise-grade machine-learning disease risk estimation for Heart Disease, "
+        "Diabetes, and Breast Cancer with clinician authentication and telemetry history."
     ),
-    version="1.1.0",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -89,18 +133,21 @@ BREAST_CANCER_FEATURES = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# System & Information Endpoints
+# ---------------------------------------------------------------------------
 @app.get("/")
 def root():
     return {
-        "message": "MedPredict AI — Disease Prediction API",
-        "version": "1.1.0",
+        "message": "MedPredict AI — Clinical Intelligence API",
+        "version": "2.0.0",
         "status": "online",
         "diseases": ["Heart Disease", "Diabetes", "Breast Cancer"],
         "algorithms": ["Logistic Regression", "SVM", "Random Forest", "XGBoost"],
         "docs": "/docs",
         "disclaimer": (
-            "This API is for educational purposes only. "
-            "Outputs are not medical diagnoses."
+            "This API is for educational and clinical research demonstration only. "
+            "Outputs are probabilistic risk scores and do not constitute clinical diagnoses."
         ),
     }
 
@@ -170,8 +217,115 @@ def get_disease_metrics(disease_key: str):
         raise HTTPException(status_code=500, detail="Failed to load metrics")
 
 
+# ---------------------------------------------------------------------------
+# Authentication Endpoints
+# ---------------------------------------------------------------------------
+@app.post("/auth/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
+def register(data: UserRegisterInput):
+    """Register a new clinician or user account."""
+    existing = get_user_by_email(data.email)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="An account with this email address already exists.",
+        )
+    pw_hash = hash_password(data.password)
+    user = create_user(email=data.email, name=data.name, password_hash=pw_hash)
+    token = create_access_token({"sub": user["id"], "email": user["email"], "name": user["name"]})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user,
+    }
+
+
+@app.post("/auth/login", response_model=AuthResponse)
+def login(data: UserLoginInput):
+    """Authenticate clinician with email and password."""
+    user = get_user_by_email(data.email)
+    if not user or not verify_password(data.password, user["password_hash"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    token = create_access_token({"sub": user["id"], "email": user["email"], "name": user["name"]})
+    user_info = {
+        "id": user["id"],
+        "email": user["email"],
+        "name": user["name"],
+        "created_at": user.get("created_at"),
+    }
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user_info,
+    }
+
+
+@app.get("/auth/me", response_model=UserResponse)
+def get_current_user_profile(user: dict = Depends(get_current_user)):
+    """Fetch current authenticated user profile."""
+    return user
+
+
+# ---------------------------------------------------------------------------
+# Prediction History Endpoints
+# ---------------------------------------------------------------------------
+@app.get("/history", response_model=List[HistoryItemResponse])
+def get_history(user: dict = Depends(get_current_user)):
+    """Fetch logged-in user's longitudinal prediction history."""
+    try:
+        return get_user_history(user["id"])
+    except Exception as e:
+        logger.error(f"Error fetching history: {e}")
+        raise HTTPException(status_code=500, detail="Could not load prediction history.")
+
+
+@app.post("/history", response_model=HistoryItemResponse, status_code=status.HTTP_201_CREATED)
+def save_history_entry(data: SaveHistoryInput, user: dict = Depends(get_current_user)):
+    """Manually or explicitly save a prediction result to user's history."""
+    try:
+        saved = save_prediction(
+            user_id=user["id"],
+            disease=data.disease,
+            prediction=data.prediction,
+            result=data.result,
+            probability=data.probability,
+            risk_category=data.risk_category,
+            model=data.model,
+            inputs=data.inputs,
+        )
+        return saved
+    except Exception as e:
+        logger.error(f"Error saving history: {e}")
+        raise HTTPException(status_code=500, detail="Failed to save prediction record.")
+
+
+@app.delete("/history/{item_id}", status_code=status.HTTP_200_OK)
+def delete_history_entry(item_id: int, user: dict = Depends(get_current_user)):
+    """Delete a specific prediction entry."""
+    success = delete_history_item(user["id"], item_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="History entry not found or access denied.")
+    return {"status": "success", "message": f"History entry {item_id} deleted."}
+
+
+@app.delete("/history", status_code=status.HTTP_200_OK)
+def clear_all_history(user: dict = Depends(get_current_user)):
+    """Clear all prediction records for the current user."""
+    count = clear_user_history(user["id"])
+    return {"status": "success", "message": f"Cleared {count} history records."}
+
+
+# ---------------------------------------------------------------------------
+# Prediction Endpoints
+# ---------------------------------------------------------------------------
 @app.post("/predict/heart", response_model=PredictionResponse)
-def predict_heart_disease(data: HeartDiseaseInput):
+def predict_heart_disease(
+    data: HeartDiseaseInput,
+    authorization: Optional[str] = Header(None),
+):
     try:
         values = [getattr(data, f) for f in HEART_FEATURES]
         result = run_prediction(
@@ -180,6 +334,25 @@ def predict_heart_disease(data: HeartDiseaseInput):
             features=HEART_FEATURES,
             values=values,
         )
+
+        # Automatically record to history if authenticated
+        user = get_optional_user(authorization)
+        if user:
+            try:
+                input_dict = {f: getattr(data, f) for f in HEART_FEATURES}
+                save_prediction(
+                    user_id=user["id"],
+                    disease="Heart Disease",
+                    prediction=result["prediction"],
+                    result=result["result"],
+                    probability=result["probability"],
+                    risk_category=result["risk_category"],
+                    model=result["model"],
+                    inputs=input_dict,
+                )
+            except Exception as e:
+                logger.warning(f"Auto-save to history failed: {e}")
+
         return result
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail=str(e))
@@ -191,7 +364,10 @@ def predict_heart_disease(data: HeartDiseaseInput):
 
 
 @app.post("/predict/diabetes", response_model=PredictionResponse)
-def predict_diabetes(data: DiabetesInput):
+def predict_diabetes(
+    data: DiabetesInput,
+    authorization: Optional[str] = Header(None),
+):
     try:
         values = [getattr(data, f) for f in DIABETES_FEATURES]
         result = run_prediction(
@@ -200,6 +376,25 @@ def predict_diabetes(data: DiabetesInput):
             features=DIABETES_FEATURES,
             values=values,
         )
+
+        # Automatically record to history if authenticated
+        user = get_optional_user(authorization)
+        if user:
+            try:
+                input_dict = {f: getattr(data, f) for f in DIABETES_FEATURES}
+                save_prediction(
+                    user_id=user["id"],
+                    disease="Diabetes",
+                    prediction=result["prediction"],
+                    result=result["result"],
+                    probability=result["probability"],
+                    risk_category=result["risk_category"],
+                    model=result["model"],
+                    inputs=input_dict,
+                )
+            except Exception as e:
+                logger.warning(f"Auto-save to history failed: {e}")
+
         return result
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail=str(e))
@@ -211,7 +406,10 @@ def predict_diabetes(data: DiabetesInput):
 
 
 @app.post("/predict/breast-cancer", response_model=PredictionResponse)
-def predict_breast_cancer(data: BreastCancerInput):
+def predict_breast_cancer(
+    data: BreastCancerInput,
+    authorization: Optional[str] = Header(None),
+):
     try:
         values = [getattr(data, f) for f in BREAST_CANCER_FEATURES]
         result = run_prediction(
@@ -220,6 +418,25 @@ def predict_breast_cancer(data: BreastCancerInput):
             features=BREAST_CANCER_FEATURES,
             values=values,
         )
+
+        # Automatically record to history if authenticated
+        user = get_optional_user(authorization)
+        if user:
+            try:
+                input_dict = {f: getattr(data, f) for f in BREAST_CANCER_FEATURES}
+                save_prediction(
+                    user_id=user["id"],
+                    disease="Breast Cancer",
+                    prediction=result["prediction"],
+                    result=result["result"],
+                    probability=result["probability"],
+                    risk_category=result["risk_category"],
+                    model=result["model"],
+                    inputs=input_dict,
+                )
+            except Exception as e:
+                logger.warning(f"Auto-save to history failed: {e}")
+
         return result
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail=str(e))
