@@ -50,6 +50,11 @@ export default function Footer() {
                   Methodology & About
                 </Link>
               </li>
+              <li>
+                <Link to="/performance" className="hover:text-white transition-colors">
+                  Model Benchmarks & Metrics
+                </Link>
+              </li>
             </ul>
           </div>
 

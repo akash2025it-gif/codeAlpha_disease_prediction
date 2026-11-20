@@ -248,7 +248,10 @@ export default function Dashboard() {
             <Activity className="w-4 h-4 text-emerald-600" />
           </div>
           <p className="text-2xl sm:text-3xl font-black text-emerald-600">3 Models</p>
-          <p className="text-[0.7rem] text-slate-500 mt-1">Heart, Diabetes, Oncology</p>
+          <Link to="/performance" className="text-[0.7rem] font-semibold text-emerald-700 hover:text-emerald-900 mt-1 inline-flex items-center gap-1">
+            <span>View Benchmarks</span>
+            <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
 
         <div className="card p-5 bg-white border border-slate-200">

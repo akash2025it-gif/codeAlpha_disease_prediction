@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { to: '/', label: 'Home' },
   { to: '/predict', label: 'Disease Prediction' },
   { to: '/dashboard', label: 'Dashboard' },
+  { to: '/performance', label: 'Model Benchmarks' },
   { to: '/about', label: 'About' },
 ];
 

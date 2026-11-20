@@ -130,10 +130,15 @@ codeAlpha_disease_prediction/
 │       └── deploy-pages.yml          # GitHub Pages build and deployment workflow
 │
 ├── backend/
-│   ├── main.py                       # FastAPI application, CORS & route declarations
+│   ├── api/
+│   │   └── index.py                  # Vercel serverless function entrypoint
+│   ├── main.py                       # FastAPI application, CORS, Vercel middleware & route declarations
 │   ├── requirements.txt              # Production runtime inference dependencies (~110 MB)
 │   ├── requirements-training.txt     # Complete training dependencies (includes XGBoost)
-│   ├── vercel.json                   # Vercel serverless configuration (1024MB, 30s timeout)
+│   ├── vercel.json                   # Vercel serverless configuration (path rewrite forwarding)
+│   ├── tests/
+│   │   ├── test_api_endpoints.py     # End-to-end integration test suite
+│   │   └── test_path_rewrite.py      # Middleware path rewrite verification
 │   ├── datasets/
 │   │   ├── download_datasets.py      # Automated dataset downloader & validator
 │   │   ├── heart_disease.csv         # Cleveland Heart Disease cohort data
@@ -163,6 +168,7 @@ codeAlpha_disease_prediction/
 │   │   │   ├── Footer.jsx            # Application footer with regulatory notices
 │   │   │   ├── FormField.jsx         # Field-level validation & clinical range tooltips
 │   │   │   ├── PredictionCard.jsx    # Animated probability gauge & risk classification
+│   │   │   ├── ProtectedRoute.jsx    # Clinician session validation & route guard
 │   │   │   └── forms/
 │   │   │       ├── HeartForm.jsx     # 13-feature Heart Disease form with sample presets
 │   │   │       ├── DiabetesForm.jsx  # 8-feature Diabetes form with sample presets
