@@ -106,6 +106,10 @@ def test_vercel_path_middleware():
     m = VercelPathMiddleware(DummyApp())
 
     cases = [
+        ({"type": "http", "path": "/api/index.py", "query_string": b"__path=/predict/heart", "headers": []}, "/predict/heart"),
+        ({"type": "http", "path": "/api/index.py", "query_string": b"__path=/auth/login", "headers": []}, "/auth/login"),
+        ({"type": "http", "path": "/api/index.py", "query_string": b"__path=/health", "headers": []}, "/health"),
+        ({"type": "http", "path": "/api/index.py", "query_string": b"__path=/", "headers": []}, "/"),
         ({"type": "http", "path": "/api/index", "headers": [(b"x-matched-path", b"/auth/login")]}, "/auth/login"),
         ({"type": "http", "path": "/main.py", "headers": [(b"x-matched-path", b"/predict/heart")]}, "/predict/heart"),
         ({"type": "http", "path": "/api/predict/diabetes", "headers": []}, "/predict/diabetes"),

@@ -22,6 +22,7 @@ Endpoints:
 import os
 import sys
 import logging
+import urllib.parse
 from typing import Optional, List, Dict, Any
 
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -108,20 +109,37 @@ class VercelPathMiddleware:
     """
     ASGI middleware ensuring incoming requests on Vercel retain their original request paths.
     
-    When Vercel processes rewrites (e.g. /(.*) -> /api/index or /main.py),
-    the ASGI scope['path'] can become the rewrite destination (/api/index or /main.py).
-    This middleware detects when scope['path'] is a rewrite artifact and restores the
-    actual requested path from Vercel's edge headers (x-matched-path, x-forwarded-uri,
-    x-original-uri, etc.). It also strips any unexpected '/api' prefix and normalizes
-    trailing slashes so all routes resolve reliably.
+    When Vercel processes rewrites (e.g. /(.*) -> /api/index.py?__path=/$1),
+    the original request path is captured in the '__path' query parameter or headers.
+    This middleware detects '__path' in query_string, extracts it as scope['path'],
+    and cleans query_string so FastAPI routes (GET /health, POST /auth/login,
+    POST /predict/heart) match seamlessly.
     """
     def __init__(self, app):
         self.app = app
 
     async def __call__(self, scope, receive, send):
         if scope.get("type") == "http":
+            # 1. Check if rewritten query string has __path=
+            qs_bytes = scope.get("query_string", b"")
+            if b"__path=" in qs_bytes:
+                qs = qs_bytes.decode("utf-8", errors="ignore")
+                params = urllib.parse.parse_qs(qs)
+                if "__path" in params and params["__path"]:
+                    target_path = params["__path"][0]
+                    if not target_path.startswith("/"):
+                        target_path = "/" + target_path
+                    if len(target_path) > 1 and target_path.endswith("/"):
+                        target_path = target_path.rstrip("/")
+                    scope["path"] = target_path
+                    scope["raw_path"] = target_path.encode("utf-8")
+
+                    # Strip __path from query_string
+                    cleaned = {k: v for k, v in params.items() if k != "__path"}
+                    scope["query_string"] = urllib.parse.urlencode(cleaned, doseq=True).encode("utf-8")
+
             path = scope.get("path", "")
-            # If path points to the serverless function file/destination
+            # 2. Check if path still points to serverless entrypoint without __path query
             if path in ("/main.py", "/api/index", "/api/index.py", "/api", "/api/"):
                 headers = dict(scope.get("headers", []))
                 for header_name in (b"x-matched-path", b"x-forwarded-uri", b"x-original-uri", b"x-rewrite-url"):
@@ -136,14 +154,14 @@ class VercelPathMiddleware:
                     scope["path"] = "/"
                     scope["raw_path"] = b"/"
 
-            # If path starts with /api/ (e.g. /api/predict/heart), strip prefix so both /predict/... and /api/predict/... work
+            # 3. If path starts with /api/ (e.g. /api/predict/heart), strip prefix so both /predict/... and /api/predict/... work
             current_path = scope.get("path", "")
             if current_path.startswith("/api/") and current_path not in ("/api/docs", "/api/redoc", "/api/openapi.json"):
                 new_path = current_path[4:]
                 scope["path"] = new_path
                 scope["raw_path"] = new_path.encode("utf-8")
 
-            # Trailing slash normalization: strip trailing slash for non-root paths
+            # 4. Trailing slash normalization: strip trailing slash for non-root paths
             current_path = scope.get("path", "")
             if len(current_path) > 1 and current_path.endswith("/"):
                 normalized = current_path.rstrip("/")
@@ -188,13 +206,11 @@ BREAST_CANCER_FEATURES = [
 # System & Information Endpoints
 # ---------------------------------------------------------------------------
 @app.get("/")
-def root(request: Request):
+def root():
     return {
         "message": "MedPredict AI — Clinical Intelligence API",
         "version": "2.0.0",
         "status": "online",
-        "debug_headers": dict(request.headers),
-        "debug_scope_path": request.scope.get("path"),
         "diseases": ["Heart Disease", "Diabetes", "Breast Cancer"],
         "algorithms": ["Logistic Regression", "SVM", "Random Forest", "XGBoost"],
         "docs": "/docs",
