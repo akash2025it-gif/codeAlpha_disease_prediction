@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import {
   Brain,
   Layers,
@@ -40,11 +39,7 @@ const AlgoCard = ({ name, type, pros, desc, color }) => (
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-      >
+      <div>
         {/* Header */}
         <div className="mb-8">
           <p className="section-label mb-1">Architecture & Clinical Informatics</p>
@@ -186,7 +181,7 @@ export default function About() {
                 4
               </span>
               <span>
-                <strong>Composite Model Selection:</strong> Ranked by a composite objective: \(0.70 \times \text{F1-Score} + 0.30 \times \text{ROC-AUC}\), ensuring sensitivity is prioritized for clinical safety.
+                <strong>Composite Model Selection:</strong> Ranked using 70% F1-score and 30% ROC-AUC, ensuring sensitivity is prioritized for clinical safety.
               </span>
             </div>
           </div>
@@ -248,7 +243,7 @@ export default function About() {
             </ul>
           </div>
         </Section>
-      </motion.div>
+      </div>
     </div>
   );
 }
