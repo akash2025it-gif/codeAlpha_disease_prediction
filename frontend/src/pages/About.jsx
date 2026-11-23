@@ -3,14 +3,8 @@ import {
   Brain,
   Layers,
   Database,
-  ShieldCheck,
-  GitBranch,
   Cpu,
-  BarChart2,
-  Stethoscope,
   Lock,
-  LineChart,
-  Activity,
   FileCheck2,
 } from 'lucide-react';
 
@@ -222,10 +216,22 @@ export default function About() {
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-slate-900 text-xs mb-1">Serverless Inference</h3>
               <p className="text-xs text-slate-600">
-                Lightweight ASGI microservices execute serialized pipelines with sub-150ms latency and high reliability.
+                A FastAPI ASGI service loads serialized scikit-learn pipelines and returns structured JSON prediction responses.
               </p>
             </div>
           </div>
+          <p className="text-xs text-slate-600 pt-2">
+            <strong className="text-slate-700">Technology stack:</strong> React and Vite provide the web client; Axios attaches bearer authentication; FastAPI and Pydantic validate API requests; scikit-learn, pandas, NumPy and joblib support the inference pipelines. GitHub Pages hosts the client and Vercel hosts the API.
+          </p>
+        </Section>
+
+        <Section title="Future Modules" icon={<Layers className="w-4 h-4" />}>
+          <p>
+            Kidney disease, liver disease, Parkinson&apos;s disease, stroke, and thyroid prediction are not currently offered. They are marked as <strong>Coming Soon</strong> rather than exposed as prediction tools because this repository does not yet include verified datasets, trained pipelines, evaluation artifacts, or production API endpoints for them.
+          </p>
+          <p>
+            New modules will be added only after a dataset review, leakage-safe training pipeline, held-out evaluation, serialized model artifact, schema validation, and authenticated endpoint have been completed.
+          </p>
         </Section>
 
         {/* Section 6: Medical Limitations & Governance */}
