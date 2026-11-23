@@ -62,6 +62,13 @@ def init_db():
             )
         """)
 
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS revoked_tokens (
+                token_hash TEXT PRIMARY KEY,
+                expires_at INTEGER NOT NULL
+            )
+        """)
+
         conn.commit()
         conn.close()
         logger.info(f"Database initialized successfully at {DB_PATH}")
@@ -236,5 +243,24 @@ def clear_user_history(user_id: int) -> int:
         )
         conn.commit()
         return cursor.rowcount
+    finally:
+        conn.close()
+
+
+def revoke_token(token_hash: str, expires_at: int) -> None:
+    """Record a JWT invalidation until its natural expiry."""
+    conn = get_db_connection()
+    try:
+        conn.execute("DELETE FROM revoked_tokens WHERE expires_at < strftime('%s', 'now')")
+        conn.execute("INSERT OR REPLACE INTO revoked_tokens (token_hash, expires_at) VALUES (?, ?)", (token_hash, expires_at))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def is_token_revoked(token_hash: str) -> bool:
+    conn = get_db_connection()
+    try:
+        return conn.execute("SELECT 1 FROM revoked_tokens WHERE token_hash = ? AND expires_at >= strftime('%s', 'now')", (token_hash,)).fetchone() is not None
     finally:
         conn.close()

@@ -5,6 +5,7 @@ user telemetry history persistence, and Vercel path normalization middleware.
 """
 import os
 import sys
+import uuid
 
 # Add backend directory to module search path
 backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,13 +16,14 @@ from main import (
     root,
     health_check,
     login,
+    register,
     predict_heart_disease,
     predict_diabetes,
     predict_breast_cancer,
     get_history,
     VercelPathMiddleware,
 )
-from schemas.auth import UserLoginInput
+from schemas.auth import UserLoginInput, UserRegisterInput
 from schemas.models import HeartDiseaseInput, DiabetesInput, BreastCancerInput
 
 
@@ -39,11 +41,12 @@ def test_system_endpoints():
 
 
 def test_auth_and_predictions():
-    # Login with demo clinician
-    creds = UserLoginInput(email="doctor@medpredict.ai", password="MedicalAI2026!")
-    auth = login(creds)
+    # Register an isolated test clinician, then authenticate it.
+    email = f"test-{uuid.uuid4().hex}@example.test"
+    register(UserRegisterInput(name="Test Clinician", email=email, password="TestPassword2026!"))
+    auth = login(UserLoginInput(email=email, password="TestPassword2026!"))
     assert auth["access_token"]
-    assert auth["user"]["name"] == "Dr. Sarah Mitchell"
+    assert auth["user"]["name"] == "Test Clinician"
     token = auth["access_token"]
     auth_header = f"Bearer {token}"
     print("PASS: Clinician authentication")

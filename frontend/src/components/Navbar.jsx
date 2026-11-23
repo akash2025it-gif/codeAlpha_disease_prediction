@@ -4,7 +4,6 @@ import {
   Activity,
   Menu,
   X,
-  User,
   LogOut,
   LayoutDashboard,
   Stethoscope,
@@ -14,9 +13,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
 const NAV_LINKS = [
-  { to: '/', label: 'Home' },
-  { to: '/predict', label: 'Disease Prediction' },
   { to: '/dashboard', label: 'Dashboard' },
+  { to: '/predict', label: 'Disease Prediction' },
   { to: '/performance', label: 'Model Benchmarks' },
   { to: '/about', label: 'About' },
 ];
@@ -34,7 +32,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setUserDropdown(false);
-    navigate('/');
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -43,7 +41,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo */}
           <Link
-            to="/"
+            to={isAuthenticated ? '/dashboard' : '/login'}
             className="flex items-center gap-2.5 font-black text-slate-900 hover:opacity-90 transition-opacity"
             aria-label="MedPredict AI home"
           >

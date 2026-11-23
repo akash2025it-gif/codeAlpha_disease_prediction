@@ -23,6 +23,7 @@ import os
 import sys
 import logging
 import urllib.parse
+import hashlib
 from typing import Optional, List, Dict, Any
 
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -71,19 +72,6 @@ logger = logging.getLogger(__name__)
 
 # Initialize database tables
 init_db()
-
-# Create default demo clinician account if it does not already exist
-try:
-    demo_email = "doctor@medpredict.ai"
-    if not get_user_by_email(demo_email):
-        create_user(
-            email=demo_email,
-            name="Dr. Sarah Mitchell",
-            password_hash=hash_password("MedicalAI2026!"),
-        )
-        logger.info("Created default demo clinician account: doctor@medpredict.ai")
-except Exception as e:
-    logger.warning(f"Demo user creation notice: {e}")
 
 ALLOWED_ORIGINS = [
     "https://akash2025it-gif.github.io",
@@ -336,6 +324,18 @@ def login(data: UserLoginInput):
 def get_current_user_profile(user: dict = Depends(get_current_user)):
     """Fetch current authenticated user profile."""
     return user
+
+
+@app.post("/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(authorization: Optional[str] = Header(None), user: dict = Depends(get_current_user)):
+    """Invalidate the current JWT until it expires."""
+    from utils.auth import decode_access_token
+    from utils.db import revoke_token
+
+    token = authorization.split()[1]
+    payload = decode_access_token(token) or {}
+    revoke_token(hashlib.sha256(token.encode("utf-8")).hexdigest(), int(payload.get("exp", 0)))
+    return None
 
 
 # ---------------------------------------------------------------------------

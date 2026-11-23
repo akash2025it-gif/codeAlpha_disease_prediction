@@ -55,6 +55,7 @@ const PRESETS = {
 export default function HeartForm({ onResult, onLoading }) {
   const [form, setForm] = useState(DEFAULTS);
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -81,7 +82,8 @@ export default function HeartForm({ onResult, onLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (submitting || !validate()) return;
+    setSubmitting(true);
     onLoading(true);
     try {
       const payload = { ...form };
@@ -99,6 +101,7 @@ export default function HeartForm({ onResult, onLoading }) {
       });
     } finally {
       onLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -324,7 +327,7 @@ export default function HeartForm({ onResult, onLoading }) {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 cursor-pointer">
+        <button type="submit" disabled={submitting} className="w-full sm:flex-1 btn-primary py-3 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70">
           Predict Heart Disease Risk
         </button>
         <button

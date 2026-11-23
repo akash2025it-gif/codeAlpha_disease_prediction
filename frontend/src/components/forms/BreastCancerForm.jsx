@@ -154,6 +154,7 @@ const GROUPS = [
 export default function BreastCancerForm({ onResult, onLoading }) {
   const [form, setForm] = useState(DEFAULTS);
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -181,7 +182,8 @@ export default function BreastCancerForm({ onResult, onLoading }) {
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
-    if (!validate()) return;
+    if (submitting || !validate()) return;
+    setSubmitting(true);
     onLoading(true);
     try {
       const payload = {};
@@ -199,6 +201,7 @@ export default function BreastCancerForm({ onResult, onLoading }) {
       });
     } finally {
       onLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -252,7 +255,7 @@ export default function BreastCancerForm({ onResult, onLoading }) {
       ))}
 
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-        <button type="submit" className="w-full sm:flex-1 btn-primary py-3 bg-purple-600 hover:bg-purple-700 cursor-pointer">
+        <button type="submit" disabled={submitting} className="w-full sm:flex-1 btn-primary py-3 bg-purple-600 hover:bg-purple-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70">
           Predict Breast Cancer Risk
         </button>
         <button

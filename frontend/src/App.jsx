@@ -3,7 +3,6 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
-import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -19,7 +18,7 @@ export default function App() {
           <Navbar />
           <main className="flex-1">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route
@@ -30,11 +29,11 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/predict" element={<Predict />} />
-              <Route path="/performance" element={<Performance />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/predict" element={<ProtectedRoute><Predict /></ProtectedRoute>} />
+              <Route path="/performance" element={<ProtectedRoute><Performance /></ProtectedRoute>} />
+              <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
               <Route path="/disclaimer" element={<Navigate to="/about" replace />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </main>
           <Footer />

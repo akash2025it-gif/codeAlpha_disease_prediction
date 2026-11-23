@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authLogin, authRegister, authMe } from '../services/api';
+import { authLogin, authRegister, authMe, authLogout } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -32,7 +32,10 @@ export function AuthProvider({ children }) {
           console.warn('[Auth] Session validation failed:', err.message);
           // Only clear if 401 unauthorized
           if (err.response && err.response.status === 401) {
-            logout();
+            setToken(null);
+            setUser(null);
+            localStorage.removeItem('medpredict_token');
+            localStorage.removeItem('medpredict_user');
           }
         }
       }
@@ -60,7 +63,12 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      if (localStorage.getItem('medpredict_token')) await authLogout();
+    } catch {
+      // Always remove the local credential; a network failure must not trap a user in-session.
+    }
     setToken(null);
     setUser(null);
     localStorage.removeItem('medpredict_token');

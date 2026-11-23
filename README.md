@@ -32,14 +32,14 @@
 - **Token-Based Security:** Cryptographically signed HS256 JWT bearer tokens for stateful user authorization.
 - **PBKDF2 Password Hashing:** Passwords hashed with standard library `hashlib.pbkdf2_hmac` using unique 16-byte cryptographic salts and 100,000 rounds of SHA-256.
 - **Clinician Registration & Login:** Dedicated authentication pages with password strength verification and field validation.
-- **Evaluator Access:** Pre-configured demo clinician credentials (`doctor@medpredict.ai` / `MedicalAI2026!`) with a one-click **"Fill Demo"** button on the sign-in page.
+- **Account Access:** New clinicians register through the application; no shared credentials are shipped or exposed in the client.
 
 ### 📊 Clinical Intelligence Dashboard
 - **Longitudinal Telemetry History:** Automatically records each prediction run by an authenticated clinician.
 - **Risk Categorization & Search:** Real-time filtering by condition (`ALL`, `Heart`, `Diabetes`, `Breast Cancer`) and risk level (`Lower Risk`, `Moderate Risk`, `Higher Risk`).
 - **Telemetry Inspection Modal:** Audit the exact laboratory and physiological inputs that generated any historical prediction.
 - **Clinical Data Export:** One-click **Export CSV** function to download patient telemetry logs for clinical records and reporting.
-- **Dual-Layer Persistence:** Client-side `localStorage` synchronization preserves historical records across browser sessions and serverless container rotations.
+- **History Persistence:** Prediction history is retrieved only from the authenticated backend. Configure a persistent production database before relying on history in a serverless deployment.
 
 ### 🧬 Disease Prediction Modules
 - **Heart Disease Risk Evaluation:** 13 clinical biomarkers (Cleveland Clinic cohort) evaluating resting blood pressure, serum cholesterol, resting ECG, fluoroscopy vessels, and exercise treadmill depression.

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -10,8 +10,6 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
-  Stethoscope,
-  Sparkles,
   ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -19,7 +17,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,6 +26,10 @@ export default function Login() {
   const [error, setError] = useState(null);
 
   const from = location.state?.from?.pathname || '/dashboard';
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/dashboard', { replace: true });
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,12 +55,6 @@ export default function Login() {
     }
   };
 
-  const fillDemoAccount = () => {
-    setEmail('doctor@medpredict.ai');
-    setPassword('MedicalAI2026!');
-    setError(null);
-  };
-
   return (
     <div className="min-h-[calc(100vh-130px)] flex items-center justify-center px-4 sm:px-6 py-12 bg-gradient-to-b from-slate-50 via-white to-blue-50/40">
       <motion.div
@@ -78,27 +74,6 @@ export default function Login() {
           <p className="text-sm text-slate-500 mt-1">
             Access your clinical dashboard, diagnostic models, and patient telemetry history.
           </p>
-        </div>
-
-        {/* Demo Account Callout */}
-        <div className="mb-6 p-4 rounded-xl bg-blue-50/80 border border-blue-200/80 shadow-xs flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600/10 text-blue-700 flex items-center justify-center flex-shrink-0">
-              <Stethoscope className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-blue-950">Quick Evaluator Access</p>
-              <p className="text-[0.7rem] text-blue-700">Pre-fill demo clinician credentials</p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={fillDemoAccount}
-            className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-white border border-blue-300 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-2xs"
-          >
-            <Sparkles className="w-3 h-3" />
-            <span>Fill Demo</span>
-          </button>
         </div>
 
         {/* Card Form */}

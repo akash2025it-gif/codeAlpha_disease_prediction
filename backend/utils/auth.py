@@ -14,7 +14,7 @@ from fastapi import Header, HTTPException, status
 
 JWT_SECRET = os.environ.get(
     "JWT_SECRET",
-    "medpredict-ai-secret-key-production-enterprise-2026-auth-token-salt"
+    secrets.token_urlsafe(48),
 )
 TOKEN_EXPIRE_SECONDS = int(os.environ.get("JWT_EXPIRE_SECONDS", 60 * 60 * 24 * 7))  # 7 days
 
@@ -142,7 +142,14 @@ def get_current_user(authorization: Optional[str] = Header(None)) -> Dict[str, A
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    from utils.db import get_user_by_id
+    from utils.db import get_user_by_id, is_token_revoked
+
+    if is_token_revoked(hashlib.sha256(token.encode("utf-8")).hexdigest()):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session has been signed out. Please log in again.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     user = get_user_by_id(payload.get("sub"))
     if not user:

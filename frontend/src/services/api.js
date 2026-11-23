@@ -16,7 +16,9 @@ const API_BASE =
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  // Vercel can take longer than 30 seconds to initialise a cold Python/ML function.
+  // Keep this below a minute so the UI remains responsive while avoiding false failures.
+  timeout: 55000,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -40,7 +42,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.code === 'ECONNABORTED') {
+    if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
       return Promise.reject(
         new Error(
           'Request timed out. The serverless backend may be warming up — please retry in a moment.'
@@ -99,25 +101,25 @@ export async function authMe() {
   return res.data;
 }
 
+export async function authLogout() {
+  await api.post('/auth/logout');
+}
+
 // ---------------------------------------------------------------------------
 // Prediction Endpoints
 // ---------------------------------------------------------------------------
 export async function predictHeartDisease(formData) {
   const res = await api.post('/predict/heart', formData);
-  // Back up locally as well
-  saveLocalHistoryRecord('Heart Disease', res.data, formData);
   return res.data;
 }
 
 export async function predictDiabetes(formData) {
   const res = await api.post('/predict/diabetes', formData);
-  saveLocalHistoryRecord('Diabetes', res.data, formData);
   return res.data;
 }
 
 export async function predictBreastCancer(formData) {
   const res = await api.post('/predict/breast-cancer', formData);
-  saveLocalHistoryRecord('Breast Cancer', res.data, formData);
   return res.data;
 }
 
@@ -125,89 +127,23 @@ export async function predictBreastCancer(formData) {
 // Longitudinal Prediction History
 // ---------------------------------------------------------------------------
 export async function getHistory() {
-  try {
-    const res = await api.get('/history');
-    return res.data;
-  } catch (err) {
-    // If unauthenticated or offline, return locally cached history
-    return getLocalHistory();
-  }
+  const res = await api.get('/history');
+  return res.data;
 }
 
 export async function saveHistory(data) {
-  try {
-    const res = await api.post('/history', data);
-    return res.data;
-  } catch (err) {
-    saveLocalHistoryRecord(data.disease, data, data.inputs);
-    return data;
-  }
+  const res = await api.post('/history', data);
+  return res.data;
 }
 
 export async function deleteHistoryItem(id) {
-  try {
-    const res = await api.delete(`/history/${id}`);
-    deleteLocalHistoryItem(id);
-    return res.data;
-  } catch (err) {
-    deleteLocalHistoryItem(id);
-    return { status: 'success' };
-  }
+  const res = await api.delete(`/history/${id}`);
+  return res.data;
 }
 
 export async function clearAllHistory() {
-  try {
-    const res = await api.delete('/history');
-    localStorage.removeItem('medpredict_local_history');
-    return res.data;
-  } catch (err) {
-    localStorage.removeItem('medpredict_local_history');
-    return { status: 'success' };
-  }
-}
-
-// ---------------------------------------------------------------------------
-// LocalStorage History Fallback
-// ---------------------------------------------------------------------------
-function getLocalHistory() {
-  try {
-    const data = localStorage.getItem('medpredict_local_history');
-    return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocalHistoryRecord(diseaseName, result, inputs) {
-  try {
-    const current = getLocalHistory();
-    const newRecord = {
-      id: Date.now(),
-      disease: diseaseName,
-      prediction: result.prediction,
-      result: result.result,
-      probability: result.probability,
-      risk_category: result.risk_category,
-      model: result.model,
-      inputs: inputs || {},
-      created_at: new Date().toISOString(),
-    };
-    // Keep last 50
-    const updated = [newRecord, ...current].slice(0, 50);
-    localStorage.setItem('medpredict_local_history', JSON.stringify(updated));
-  } catch {
-    // Ignore storage quota
-  }
-}
-
-function deleteLocalHistoryItem(id) {
-  try {
-    const current = getLocalHistory();
-    const updated = current.filter((item) => String(item.id) !== String(id));
-    localStorage.setItem('medpredict_local_history', JSON.stringify(updated));
-  } catch {
-    // Ignore
-  }
+  const res = await api.delete('/history');
+  return res.data;
 }
 
 export default api;
